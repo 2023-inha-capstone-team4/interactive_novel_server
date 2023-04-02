@@ -27,9 +27,6 @@ public class ReaderEntity implements UserDetails {
     @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "user_state")
-    private String userState;
-
     @Enumerated(EnumType.STRING)
     private ReaderRole role;
 
