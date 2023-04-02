@@ -36,6 +36,7 @@ public class OAuthAttribute {
                 .userName(name)
                 .email(email)
                 .interlock(registrationId)
+                .emailAuthYn(true)
                 .role(ReaderRole.FREE)
                 .build();
     }

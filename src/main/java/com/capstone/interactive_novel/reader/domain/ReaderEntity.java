@@ -33,6 +33,12 @@ public class ReaderEntity implements UserDetails {
     @Column(name = "interlock")
     private String interlock;
 
+    @Column(name = "email_auth_key")
+    private String emailAuthKey;
+
+    @Column(name = "email_auth_yn")
+    private boolean emailAuthYn;
+
     public ReaderEntity update(String name) {
         this.userName = name;
 

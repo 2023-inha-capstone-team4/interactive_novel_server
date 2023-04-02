@@ -16,7 +16,7 @@ public class ReaderModel {
                     .email(email)
                     .password(password)
                     .userName(userName)
-                    .role(ReaderRole.FREE)
+                    .role(ReaderRole.UNCERTIFIED)
                     .interlock("self")
                     .build();
         }

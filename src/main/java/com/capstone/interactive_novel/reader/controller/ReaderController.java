@@ -4,9 +4,12 @@ import com.capstone.interactive_novel.reader.model.ReaderModel;
 import com.capstone.interactive_novel.reader.service.ReaderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,5 +21,14 @@ public class ReaderController {
         return result ?
                 ResponseEntity.ok("회원 가입이 완료되었습니다.") :
                 ResponseEntity.ok("회원 가입에 실패하였습니다.");
+    }
+
+    @GetMapping("/sign/email-auth")
+    public ResponseEntity<?> emailAuth(HttpServletRequest request) {
+        String uuid = request.getParameter("id");
+        boolean result = readerService.emailAuth(uuid);
+        return result ?
+                ResponseEntity.ok("이메일 인증에 성공하였습니다.") :
+                ResponseEntity.ok("이메일 인증에 실패하였습니다.");
     }
 }

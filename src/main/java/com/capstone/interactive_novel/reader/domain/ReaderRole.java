@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ReaderRole {
     FREE("ROLE_FREE", "무료 이용자"),
-    PAY("ROLE_PAY", "유료 이용자");
+    PAY("ROLE_PAY", "유료 이용자"),
+    UNCERTIFIED("ROLE_UNCERTIFIED", "미인증 이용자");
 
     private final String key;
     private final String title;

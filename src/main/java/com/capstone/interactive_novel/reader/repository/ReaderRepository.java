@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface ReaderRepository extends JpaRepository<ReaderEntity, String> {
     Optional<ReaderEntity> findByEmail(String email);
+    Optional<ReaderEntity> findByEmailAuthKey(String emailAuthKey);
 }
