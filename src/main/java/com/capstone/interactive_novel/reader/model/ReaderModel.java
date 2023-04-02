@@ -21,4 +21,10 @@ public class ReaderModel {
                     .build();
         }
     }
+
+    @Data
+    public static class SignIn {
+        private String email;
+        private String password;
+    }
 }

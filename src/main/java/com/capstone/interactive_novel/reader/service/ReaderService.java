@@ -53,6 +53,31 @@ public class ReaderService implements UserDetailsService {
         return true;
     }
 
+    public ReaderEntity login(ReaderModel.SignIn parameter) {
+        Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(parameter.getEmail());
+        if(optionalReader.isEmpty()) {
+            log.info("일치하는 아이디가 존재하지 않습니다.");
+            return null;
+        }
+        ReaderEntity reader = optionalReader.get();
+        System.out.println(reader.getEmail());
+
+        System.out.println(reader.getPassword());
+        System.out.println(passwordEncoder.encode(reader.getPassword()));
+        System.out.println(parameter.getPassword());
+        if(!passwordEncoder.matches(parameter.getPassword(), reader.getPassword())) {
+            log.info("비밀번호가 일치하지 않습니다.");
+            return null;
+        }
+
+        if(!reader.isEmailAuthYn()) {
+            log.info("이메일 인증이 완료되지 않았습니다.");
+            return null;
+        }
+        log.info("로그인에 성공하였습니다.");
+        return reader;
+    }
+
     public boolean emailAuth(String uuid) {
         Optional<ReaderEntity> optionalReader = readerRepository.findByEmailAuthKey(uuid);
         if(optionalReader.isEmpty()) {
