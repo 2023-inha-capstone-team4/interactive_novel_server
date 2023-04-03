@@ -2,22 +2,26 @@ package com.capstone.interactive_novel.reader.controller;
 
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import com.capstone.interactive_novel.reader.model.ReaderModel;
+import com.capstone.interactive_novel.reader.service.AuthService;
 import com.capstone.interactive_novel.reader.service.ReaderService;
 import com.capstone.interactive_novel.security.TokenProvider;
+import com.capstone.interactive_novel.security.dto.JwtDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class ReaderController {
     private final ReaderService readerService;
+    private final AuthService authService;
     private final TokenProvider tokenProvider;
 
     @PostMapping("/sign/up/reader")
@@ -37,6 +41,11 @@ public class ReaderController {
 
         var token = tokenProvider.generateToken(reader.getEmail(), reader.getUsername(), reader.getRole().getKey());
         return ResponseEntity.ok("로그인에 성공하였습니다.\n" + token);
+    }
+
+    @GetMapping("/sign/in/oauth2")
+    public ResponseEntity<JwtDto> oAuthSignIn(@AuthenticationPrincipal OAuth2User oAuthUser) {
+        return ResponseEntity.ok(authService.login(oAuthUser));
     }
 
     @GetMapping("/sign/email-auth")
