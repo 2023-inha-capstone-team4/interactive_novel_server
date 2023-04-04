@@ -1,5 +1,7 @@
 package com.capstone.interactive_novel.security;
 
+import com.capstone.interactive_novel.reader.domain.ReaderEntity;
+import com.capstone.interactive_novel.reader.repository.ReaderRepository;
 import com.capstone.interactive_novel.reader.service.ReaderService;
 import com.capstone.interactive_novel.security.dto.JwtDto;
 import io.jsonwebtoken.Claims;
@@ -7,6 +9,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,7 +19,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.Optional;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class TokenProvider {
@@ -28,9 +33,17 @@ public class TokenProvider {
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;
     private final ReaderService readerService;
+    private final ReaderRepository readerRepository;
 
-    public JwtDto generateToken(String email, String username, String role) {
-        return setJwtDto(email, username, role);
+    public JwtDto generateToken(String email) {
+        Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(email);
+        if(optionalReader.isEmpty()) {
+            log.info("존재하지 않는 사용자입니다.");
+            return null;
+        }
+        ReaderEntity reader = optionalReader.get();
+
+        return setJwtDto(email, reader.getUsername(), reader.getRole().getKey());
     }
 
     public JwtDto generateToken(OAuth2User oAuth2User) {

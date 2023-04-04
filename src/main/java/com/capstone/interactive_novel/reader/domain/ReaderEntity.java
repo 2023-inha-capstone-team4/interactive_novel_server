@@ -63,7 +63,7 @@ public class ReaderEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return email;
     }
 
     @Override

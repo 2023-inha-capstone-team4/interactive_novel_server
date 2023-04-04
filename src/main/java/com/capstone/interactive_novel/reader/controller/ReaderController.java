@@ -6,6 +6,7 @@ import com.capstone.interactive_novel.reader.service.AuthService;
 import com.capstone.interactive_novel.reader.service.ReaderService;
 import com.capstone.interactive_novel.security.TokenProvider;
 import com.capstone.interactive_novel.security.dto.JwtDto;
+import com.capstone.interactive_novel.security.dto.RefreshDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,10 @@ public class ReaderController {
             return ResponseEntity.ok("로그인에 실패하였습니다.\n");
         }
 
-        var token = tokenProvider.generateToken(reader.getEmail(), reader.getUsername(), reader.getRole().getKey());
+        var token = tokenProvider.generateToken(reader.getEmail());
+        if(ObjectUtils.isEmpty(token)) {
+            return ResponseEntity.ok("로그인에 실패하였습니다.");
+        }
         return ResponseEntity.ok("로그인에 성공하였습니다.\n" + token);
     }
 
@@ -55,5 +59,13 @@ public class ReaderController {
         return result ?
                 ResponseEntity.ok("이메일 인증에 성공하였습니다.") :
                 ResponseEntity.ok("이메일 인증에 실패하였습니다.");
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> tokenRefreshRequest(@RequestBody RefreshDto refreshDto) {
+        var result = authService.refresh(refreshDto);
+        return !ObjectUtils.isEmpty(result) ?
+                ResponseEntity.ok("토큰 재발급에 성공하였습니다.\n" + result) :
+                ResponseEntity.ok("토큰 재발급에 실패하였습니다.");
     }
 }
