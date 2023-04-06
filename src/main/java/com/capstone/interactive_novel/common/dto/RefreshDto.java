@@ -1,4 +1,4 @@
-package com.capstone.interactive_novel.security.dto;
+package com.capstone.interactive_novel.common.dto;
 
 import lombok.Data;
 

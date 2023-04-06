@@ -1,5 +1,6 @@
 package com.capstone.interactive_novel.reader.domain;
 
+import com.capstone.interactive_novel.common.domain.Role;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,7 +31,7 @@ public class ReaderEntity implements UserDetails {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    private ReaderRole role;
+    private Role role;
 
     @Column(name = "interlock")
     private String interlock;

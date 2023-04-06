@@ -1,8 +1,8 @@
 package com.capstone.interactive_novel.reader.service;
 
 import com.capstone.interactive_novel.security.TokenProvider;
-import com.capstone.interactive_novel.security.dto.JwtDto;
-import com.capstone.interactive_novel.security.dto.RefreshDto;
+import com.capstone.interactive_novel.common.dto.JwtDto;
+import com.capstone.interactive_novel.common.dto.RefreshDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

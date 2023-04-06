@@ -1,7 +1,7 @@
 package com.capstone.interactive_novel.reader.model;
 
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
-import com.capstone.interactive_novel.reader.domain.ReaderRole;
+import com.capstone.interactive_novel.common.domain.Role;
 import lombok.Data;
 
 public class ReaderModel {
@@ -16,7 +16,7 @@ public class ReaderModel {
                     .email(email)
                     .password(password)
                     .userName(userName)
-                    .role(ReaderRole.UNCERTIFIED)
+                    .role(Role.UNCERTIFIED)
                     .interlock("self")
                     .build();
         }

@@ -3,7 +3,7 @@ package com.capstone.interactive_novel.security;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import com.capstone.interactive_novel.reader.repository.ReaderRepository;
 import com.capstone.interactive_novel.reader.service.ReaderService;
-import com.capstone.interactive_novel.security.dto.JwtDto;
+import com.capstone.interactive_novel.common.dto.JwtDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

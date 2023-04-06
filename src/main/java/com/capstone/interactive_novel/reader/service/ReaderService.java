@@ -2,7 +2,7 @@ package com.capstone.interactive_novel.reader.service;
 
 import com.capstone.interactive_novel.components.MailComponents;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
-import com.capstone.interactive_novel.reader.domain.ReaderRole;
+import com.capstone.interactive_novel.common.domain.Role;
 import com.capstone.interactive_novel.reader.model.ReaderModel;
 import com.capstone.interactive_novel.reader.repository.ReaderRepository;
 import lombok.RequiredArgsConstructor;
@@ -90,7 +90,7 @@ public class ReaderService implements UserDetailsService {
             return false;
         }
         reader.setEmailAuthYn(true);
-        reader.setRole(ReaderRole.FREE);
+        reader.setRole(Role.FREE);
         readerRepository.save(reader);
         return true;
     }
