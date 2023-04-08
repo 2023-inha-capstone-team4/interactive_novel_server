@@ -10,6 +10,8 @@ import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.capstone.interactive_novel.common.domain.Role.JUNIOR;
+
 @Entity(name = "READER")
 @Getter
 @Setter
@@ -42,6 +44,9 @@ public class ReaderEntity implements UserDetails {
     @Column(name = "email_auth_yn")
     private boolean emailAuthYn;
 
+    @Column(name = "author_service_yn")
+    private boolean authorServiceYn;
+
     public ReaderEntity update(String name) {
         this.userName = name;
 
@@ -52,6 +57,9 @@ public class ReaderEntity implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<String> roles = new ArrayList<>();
         roles.add(this.getRole().getKey());
+        if(this.isAuthorServiceYn()) {
+            roles.add(JUNIOR.getKey());
+        }
         return roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());

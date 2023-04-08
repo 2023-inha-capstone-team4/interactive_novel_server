@@ -1,12 +1,16 @@
 package com.capstone.interactive_novel.reader.service;
 
-import com.capstone.interactive_novel.components.MailComponents;
+import com.capstone.interactive_novel.common.components.MailComponents;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import com.capstone.interactive_novel.common.domain.Role;
 import com.capstone.interactive_novel.reader.model.ReaderModel;
 import com.capstone.interactive_novel.reader.repository.ReaderRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +24,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ReaderService implements UserDetailsService {
+    @Value("${spring.jwt.secret}")
+    private String secretKey;
     private final ReaderRepository readerRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailComponents mailComponents;
@@ -94,4 +100,33 @@ public class ReaderService implements UserDetailsService {
         readerRepository.save(reader);
         return true;
     }
+
+    public boolean applyAuthorService(String token) {
+        Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(getEmail(token));
+        if(optionalReader.isEmpty()) {
+            log.info("유효하지 않은 사용자입니다.");
+            return false;
+        }
+        ReaderEntity reader = optionalReader.get();
+        if(reader.isAuthorServiceYn()) {
+            log.info("이미 신청된 사용자입니다.");
+            return false;
+        }
+        reader.setAuthorServiceYn(true);
+        readerRepository.save(reader);
+        return true;
+    }
+
+    public String getEmail(String token) {
+        return this.parseClaims(token).getSubject();
+    }
+
+    private Claims parseClaims(String token) {
+        try {
+            return Jwts.parser().setSigningKey(this.secretKey).parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
+        }
+    }
 }
+

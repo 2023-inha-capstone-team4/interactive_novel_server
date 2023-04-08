@@ -1,4 +1,4 @@
-package com.capstone.interactive_novel.components;
+package com.capstone.interactive_novel.common.components;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

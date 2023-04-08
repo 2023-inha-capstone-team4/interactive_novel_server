@@ -1,4 +1,4 @@
-package com.capstone.interactive_novel.security;
+package com.capstone.interactive_novel.common.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

@@ -1,6 +1,6 @@
-package com.capstone.interactive_novel.reader.service;
+package com.capstone.interactive_novel.common.service;
 
-import com.capstone.interactive_novel.security.TokenProvider;
+import com.capstone.interactive_novel.common.security.TokenProvider;
 import com.capstone.interactive_novel.common.dto.JwtDto;
 import com.capstone.interactive_novel.common.dto.RefreshDto;
 import lombok.RequiredArgsConstructor;

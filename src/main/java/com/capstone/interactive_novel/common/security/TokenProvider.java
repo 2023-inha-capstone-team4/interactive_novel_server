@@ -1,4 +1,4 @@
-package com.capstone.interactive_novel.security;
+package com.capstone.interactive_novel.common.security;
 
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import com.capstone.interactive_novel.reader.repository.ReaderRepository;
