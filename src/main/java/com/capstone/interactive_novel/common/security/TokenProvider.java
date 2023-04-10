@@ -1,11 +1,11 @@
 package com.capstone.interactive_novel.common.security;
 
+import com.capstone.interactive_novel.common.components.TokenComponents;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import com.capstone.interactive_novel.reader.repository.ReaderRepository;
 import com.capstone.interactive_novel.reader.service.ReaderService;
 import com.capstone.interactive_novel.common.dto.JwtDto;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +34,7 @@ public class TokenProvider {
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;
     private final ReaderService readerService;
     private final ReaderRepository readerRepository;
+    private final TokenComponents tokenUtils;
 
     public JwtDto generateToken(String email) {
         Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(email);
@@ -85,26 +86,14 @@ public class TokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = readerService.loadUserByUsername(this.getEmail(token));
+        UserDetails userDetails = readerService.loadUserByUsername(tokenUtils.getEmail(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-    }
-
-    public String getEmail(String token) {
-        return this.parseClaims(token).getSubject();
     }
 
     public boolean validateToken(String token) {
         if(!StringUtils.hasText(token)) return false;
 
-        var claims = this.parseClaims(token);
+        var claims = tokenUtils.parseClaims(token);
         return !claims.getExpiration().before(new Date());
-    }
-
-    private Claims parseClaims(String token) {
-        try {
-            return Jwts.parser().setSigningKey(this.secretKey).parseClaimsJws(token).getBody();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
-        }
     }
 }

@@ -1,6 +1,7 @@
 package com.capstone.interactive_novel.reader.service;
 
 import com.capstone.interactive_novel.common.components.MailComponents;
+import com.capstone.interactive_novel.common.components.TokenComponents;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import com.capstone.interactive_novel.common.domain.Role;
 import com.capstone.interactive_novel.reader.model.ReaderModel;
@@ -102,6 +103,7 @@ public class ReaderService implements UserDetailsService {
     }
 
     public boolean applyAuthorService(String token) {
+        token = TokenComponents.removeTokenHeader(token, "Bearer ");
         Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(getEmail(token));
         if(optionalReader.isEmpty()) {
             log.info("유효하지 않은 사용자입니다.");

@@ -62,8 +62,9 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> tokenRefreshRequest(@RequestBody RefreshDto refreshDto) {
-        var result = authService.refresh(refreshDto);
+    public ResponseEntity<?> tokenRefreshRequest(@RequestHeader("Authorization") String token,
+                                                 @RequestBody RefreshDto refreshDto) {
+        var result = authService.refresh(refreshDto, token);
         return !ObjectUtils.isEmpty(result) ?
                 ResponseEntity.ok("토큰 재발급에 성공하였습니다.\n" + result) :
                 ResponseEntity.ok("토큰 재발급에 실패하였습니다.");
