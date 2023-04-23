@@ -2,9 +2,10 @@ package com.capstone.interactive_novel.reader.service;
 
 import com.capstone.interactive_novel.common.components.MailComponents;
 import com.capstone.interactive_novel.common.components.TokenComponents;
+import com.capstone.interactive_novel.common.service.S3Service;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import com.capstone.interactive_novel.common.domain.Role;
-import com.capstone.interactive_novel.reader.model.ReaderModel;
+import com.capstone.interactive_novel.reader.dto.ReaderDto;
 import com.capstone.interactive_novel.reader.repository.ReaderRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -17,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -30,6 +32,7 @@ public class ReaderService implements UserDetailsService {
     private final ReaderRepository readerRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailComponents mailComponents;
+    private final S3Service s3Service;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -37,7 +40,7 @@ public class ReaderService implements UserDetailsService {
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 이메일입니다."));
     }
 
-    public boolean register(ReaderModel.SignUp parameter) {
+    public boolean register(ReaderDto.SignUp parameter) {
         Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(parameter.getEmail());
         if(optionalReader.isPresent()) {
             log.info("이미 사용 중인 이메일입니다.");
@@ -60,7 +63,7 @@ public class ReaderService implements UserDetailsService {
         return true;
     }
 
-    public ReaderEntity login(ReaderModel.SignIn parameter) {
+    public ReaderEntity login(ReaderDto.SignIn parameter) {
         Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(parameter.getEmail());
         if(optionalReader.isEmpty()) {
             log.info("일치하는 아이디가 존재하지 않습니다.");
@@ -117,6 +120,22 @@ public class ReaderService implements UserDetailsService {
         reader.setAuthorServiceYn(true);
         readerRepository.save(reader);
         return true;
+    }
+
+    public ReaderDto.profileImg modifyProfileImg(String token, MultipartFile file, String domain) {
+        token = TokenComponents.removeTokenHeader(token, "Bearer ");
+        Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(getEmail(token));
+        if(optionalReader.isEmpty()) {
+            log.info("유효하지 않은 사용자입니다.");
+            return null;
+        }
+        ReaderEntity reader = optionalReader.get();
+
+        String imageUrl = s3Service.uploadImage(file, domain);
+        reader.setProfileImgUrl(imageUrl);
+        readerRepository.save(reader);
+
+        return ReaderDto.profileImg.of(reader.getEmail(), reader.getUsername(), domain, imageUrl);
     }
 
     public String getEmail(String token) {

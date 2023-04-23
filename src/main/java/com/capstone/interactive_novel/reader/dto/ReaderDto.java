@@ -1,10 +1,11 @@
-package com.capstone.interactive_novel.reader.model;
+package com.capstone.interactive_novel.reader.dto;
 
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import com.capstone.interactive_novel.common.domain.Role;
+import lombok.Builder;
 import lombok.Data;
 
-public class ReaderModel {
+public class ReaderDto {
     @Data
     public static class SignUp {
         private String email;
@@ -26,5 +27,23 @@ public class ReaderModel {
     public static class SignIn {
         private String email;
         private String password;
+    }
+
+    @Data
+    @Builder
+    public static class profileImg {
+        private String email;
+        private String username;
+        private String domain;
+        private String url;
+
+        public static ReaderDto.profileImg of(String email, String username, String domain, String url) {
+            return profileImg.builder()
+                    .email(email)
+                    .username(username)
+                    .domain(domain)
+                    .url(url)
+                    .build();
+        }
     }
 }

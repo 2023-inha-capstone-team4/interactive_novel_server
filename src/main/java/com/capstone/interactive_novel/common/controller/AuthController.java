@@ -1,7 +1,7 @@
 package com.capstone.interactive_novel.common.controller;
 
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
-import com.capstone.interactive_novel.reader.model.ReaderModel;
+import com.capstone.interactive_novel.reader.dto.ReaderDto;
 import com.capstone.interactive_novel.common.service.AuthService;
 import com.capstone.interactive_novel.reader.service.ReaderService;
 import com.capstone.interactive_novel.common.security.TokenProvider;
@@ -26,7 +26,7 @@ public class AuthController {
     private final TokenProvider tokenProvider;
 
     @PostMapping("/sign/up/reader")
-    public ResponseEntity<?> readerSignUp(@RequestBody ReaderModel.SignUp parameter) {
+    public ResponseEntity<?> readerSignUp(@RequestBody ReaderDto.SignUp parameter) {
         boolean result = readerService.register(parameter);
         return result ?
                 ResponseEntity.ok("회원 가입이 완료되었습니다.") :
@@ -34,7 +34,7 @@ public class AuthController {
     }
 
     @GetMapping("/sign/in/reader")
-    public ResponseEntity<?> readerSignIn(@RequestBody ReaderModel.SignIn parameter) {
+    public ResponseEntity<?> readerSignIn(@RequestBody ReaderDto.SignIn parameter) {
         ReaderEntity reader = readerService.login(parameter);
         if(ObjectUtils.isEmpty(reader)) {
             return ResponseEntity.ok("로그인에 실패하였습니다.\n");

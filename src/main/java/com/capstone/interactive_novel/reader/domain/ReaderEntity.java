@@ -35,6 +35,9 @@ public class ReaderEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "profile_img")
+    private String profileImgUrl;
+
     @Column(name = "interlock")
     private String interlock;
 
