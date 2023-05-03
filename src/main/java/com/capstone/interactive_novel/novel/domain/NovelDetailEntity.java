@@ -39,6 +39,7 @@ public class NovelDetailEntity {
                 .novelDetailName(novelDetailName)
                 .novelDetailIntroduce(novelDetailIntroduce)
                 .novelDetailImageUrl(imageUrl)
+                .novelPublisherType(NovelPublisherType.READER)
                 .novel(novel)
                 .detailScore(0L)
                 .novelData(FileConvertUtils.fileToLobConverter(novelScriptFile))

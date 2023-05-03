@@ -35,6 +35,7 @@ public class NovelService {
                 .novelName(novelName)
                 .novelIntroduce(novelIntroduce)
                 .publisherName(reader.getUsername())
+                .publisherType(novel.getNovelPublisherType())
                 .NovelImageUrl(imageUrl)
                 .totalScore(0L)
                 .build();

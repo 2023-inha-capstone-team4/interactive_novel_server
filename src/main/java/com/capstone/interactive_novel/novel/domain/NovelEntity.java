@@ -35,6 +35,9 @@ public class NovelEntity {
     @Enumerated(EnumType.STRING)
     private NovelStatus novelStatus;
 
+    @Enumerated(EnumType.STRING)
+    private NovelPublisherType novelPublisherType;
+
     public static NovelEntity createNovelByReader(ReaderEntity reader, String novelName, String novelIntroduce, String imageUrl) {
         return NovelEntity.builder()
                 .reader(reader)
@@ -42,6 +45,7 @@ public class NovelEntity {
                 .novelIntroduce(novelIntroduce)
                 .NovelImageUrl(imageUrl)
                 .novelStatus(NovelStatus.FREE)
+                .novelPublisherType(NovelPublisherType.READER)
                 .totalScore(0L)
                 .build();
     }
