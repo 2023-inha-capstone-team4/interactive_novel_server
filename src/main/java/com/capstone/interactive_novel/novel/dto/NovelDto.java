@@ -9,7 +9,9 @@ public class NovelDto {
     private long id;
     private String novelName;
     private String novelIntroduce;
+    private String publisherType;
+    private long publisherId;
     private String publisherName;
-    private String imageUrl;
+    private String NovelImageUrl;
     private long totalScore;
 }

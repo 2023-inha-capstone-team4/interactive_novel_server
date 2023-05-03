@@ -21,9 +21,9 @@ public class S3Service {
 
     private final AmazonS3Client amazonS3Client;
 
-    public String uploadImage(MultipartFile file, String domain) {
+    public String uploadImage(MultipartFile file, String domain, String domainInfo) {
         String fileName = file.getOriginalFilename();
-        String fileUrl = "https://" + bucket + "/" + domain + "/" + UUID.randomUUID();
+        String fileUrl = "https://" + bucket + "/" + domain + "/" + domainInfo + "/" + UUID.randomUUID();
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(file.getContentType());

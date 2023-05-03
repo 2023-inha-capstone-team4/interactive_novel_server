@@ -30,7 +30,7 @@ public class NovelEntity {
 
     private String novelIntroduce;
 
-    private String imageUrl;
+    private String NovelImageUrl;
 
     @Enumerated(EnumType.STRING)
     private NovelStatus novelStatus;
@@ -40,7 +40,7 @@ public class NovelEntity {
                 .reader(reader)
                 .novelName(novelName)
                 .novelIntroduce(novelIntroduce)
-                .imageUrl(imageUrl)
+                .NovelImageUrl(imageUrl)
                 .novelStatus(NovelStatus.FREE)
                 .totalScore(0L)
                 .build();

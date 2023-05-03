@@ -131,7 +131,7 @@ public class ReaderService implements UserDetailsService {
         }
         ReaderEntity reader = optionalReader.get();
 
-        String imageUrl = s3Service.uploadImage(file, "profile/" + reader.getId());
+        String imageUrl = s3Service.uploadImage(file, "profile", String.valueOf(reader.getId()));
         reader.setProfileImgUrl(imageUrl);
         readerRepository.save(reader);
 

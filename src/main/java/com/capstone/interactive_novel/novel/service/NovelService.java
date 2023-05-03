@@ -26,7 +26,7 @@ public class NovelService {
             throw new RuntimeException("소설 게시 권한이 없는 사용자입니다.");
         }
 
-        String imageUrl = s3Service.uploadImage(file, novelName);
+        String imageUrl = s3Service.uploadImage(file, "novel", novelName);
         NovelEntity novel = NovelEntity.createNovelByReader(reader, novelName, novelIntroduce, imageUrl);
         novelRepository.save(novel);
 
@@ -35,7 +35,7 @@ public class NovelService {
                 .novelName(novelName)
                 .novelIntroduce(novelIntroduce)
                 .publisherName(reader.getUsername())
-                .imageUrl(imageUrl)
+                .NovelImageUrl(imageUrl)
                 .totalScore(0L)
                 .build();
     }
