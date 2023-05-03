@@ -23,7 +23,7 @@ public class AuthService {
     private final TokenComponents tokenUtils;
 
     public JwtDto login(OAuth2User oAuth2User) {
-        return tokenProvider.generateToken(oAuth2User);
+        return tokenProvider.generateOAuthUserToken(oAuth2User);
     }
 
     public JwtDto refresh(RefreshDto refreshDto, String token) {
@@ -43,6 +43,6 @@ public class AuthService {
 
         Authentication authentication = tokenProvider.getAuthentication(refreshToken);
 
-        return tokenProvider.generateToken(authentication.getName());
+        return tokenProvider.generateReaderToken(authentication.getName());
     }
 }

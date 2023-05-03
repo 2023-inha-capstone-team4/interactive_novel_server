@@ -15,7 +15,6 @@ public class ReaderDto {
         public ReaderEntity toEntity() {
             return ReaderEntity.builder()
                     .email(email)
-                    .password(password)
                     .userName(userName)
                     .role(Role.UNCERTIFIED)
                     .interlock("self")

@@ -1,5 +1,8 @@
 package com.capstone.interactive_novel.common.controller;
 
+import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
+import com.capstone.interactive_novel.publisher.dto.PublisherDto;
+import com.capstone.interactive_novel.publisher.service.PublisherService;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import com.capstone.interactive_novel.reader.dto.ReaderDto;
 import com.capstone.interactive_novel.common.service.AuthService;
@@ -22,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class AuthController {
     private final ReaderService readerService;
+    private final PublisherService publisherService;
     private final AuthService authService;
     private final TokenProvider tokenProvider;
 
@@ -36,14 +40,37 @@ public class AuthController {
     @GetMapping("/sign/in/reader")
     public ResponseEntity<?> readerSignIn(@RequestBody ReaderDto.SignIn parameter) {
         ReaderEntity reader = readerService.login(parameter);
-        if(ObjectUtils.isEmpty(reader)) {
+        if (ObjectUtils.isEmpty(reader)) {
             return ResponseEntity.ok("로그인에 실패하였습니다.\n");
         }
 
-        var token = tokenProvider.generateToken(reader.getEmail());
-        if(ObjectUtils.isEmpty(token)) {
+        var token = tokenProvider.generateReaderToken(reader.getEmail());
+        if (ObjectUtils.isEmpty(token)) {
             return ResponseEntity.ok("로그인에 실패하였습니다.");
         }
+        return ResponseEntity.ok("로그인에 성공하였습니다.\n" + token);
+    }
+
+    @PostMapping("/sign/up/publisher")
+    public ResponseEntity<?> publisherSignUp(@RequestBody PublisherDto.SignUp parameter) {
+        boolean result = publisherService.register(parameter);
+        return result ?
+                ResponseEntity.ok("회원 가입이 완료되었습니다.") :
+                ResponseEntity.ok("회원 가입에 실패하였습니다.");
+    }
+
+    @GetMapping("/sign/in/publisher")
+    public ResponseEntity<?> publisherSignIn(@RequestBody PublisherDto.SignIn parameter) {
+         PublisherEntity publisher = publisherService.login(parameter);
+         if(ObjectUtils.isEmpty(publisher)) {
+             return ResponseEntity.ok("로그인에 실패하였습니다.");
+         }
+
+         JwtDto token = tokenProvider.generatePublisherToken(parameter.getEmail());
+        if (ObjectUtils.isEmpty(token)) {
+            return ResponseEntity.ok("로그인에 실패하였습니다.");
+        }
+
         return ResponseEntity.ok("로그인에 성공하였습니다.\n" + token);
     }
 

@@ -27,6 +27,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if(checkUrl(request, "/sign/in/oauth2") ||
            checkUrl(request, "/sign/up/reader") ||
+           checkUrl(request, "/sign/up/publisher") ||
+           checkUrl(request, "/sign/in/publisher") ||
            checkUrl(request, "/sign/in/reader") ||
            checkUrl(request, "/sign/email-auth")) {
             filterChain.doFilter(request, response);

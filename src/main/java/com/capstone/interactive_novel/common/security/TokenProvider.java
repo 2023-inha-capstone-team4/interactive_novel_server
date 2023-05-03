@@ -1,6 +1,8 @@
 package com.capstone.interactive_novel.common.security;
 
 import com.capstone.interactive_novel.common.components.TokenComponents;
+import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
+import com.capstone.interactive_novel.publisher.repository.PublisherRepository;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import com.capstone.interactive_novel.reader.repository.ReaderRepository;
 import com.capstone.interactive_novel.reader.service.ReaderService;
@@ -34,9 +36,10 @@ public class TokenProvider {
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;
     private final ReaderService readerService;
     private final ReaderRepository readerRepository;
+    private final PublisherRepository publisherRepository;
     private final TokenComponents tokenUtils;
 
-    public JwtDto generateToken(String email) {
+    public JwtDto generateReaderToken(String email) {
         Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(email);
         if(optionalReader.isEmpty()) {
             log.info("존재하지 않는 사용자입니다.");
@@ -47,7 +50,17 @@ public class TokenProvider {
         return setJwtDto(email, reader.getUsername(), reader.getRole().getKey());
     }
 
-    public JwtDto generateToken(OAuth2User oAuth2User) {
+    public JwtDto generatePublisherToken(String email) {
+        Optional<PublisherEntity> optionalPublisher = publisherRepository.findByEmail(email);
+        if(optionalPublisher.isEmpty()) {
+            log.info("존재하지 않는 사용자입니다.");
+            return null;
+        }
+        PublisherEntity publisher = optionalPublisher.get();
+
+        return setJwtDto(email, publisher.getUsername(), publisher.getRole().getKey());
+    }
+    public JwtDto generateOAuthUserToken(OAuth2User oAuth2User) {
         String email = oAuth2User.getAttribute("email");
         String username = oAuth2User.getAttribute("name");
         String role = oAuth2User.getAuthorities().toString();
