@@ -25,12 +25,18 @@ public class NovelController {
         return ResponseEntity.ok(novelService.createNovelByReader(reader, file, novelName, novelIntroduce));
     }
 
-    @PostMapping("/reader/{novelId}/modify")
+    @PatchMapping("/reader/{novelId}/modify")
     ResponseEntity<NovelDto> modifyNovelByReader(@AuthenticationPrincipal ReaderEntity reader,
                                                  @PathVariable Long novelId,
                                                  @RequestPart(required = false) MultipartFile file,
                                                  @RequestPart(required = false) String novelIntroduce) {
         return ResponseEntity.ok(novelService.modifyNovelByReader(reader, novelId, file, novelIntroduce));
+    }
+
+    @PatchMapping("/reader/{novelId}/deactivate")
+    ResponseEntity<String> deactivateNovelByReader(@AuthenticationPrincipal ReaderEntity reader,
+                                                   @PathVariable Long novelId) {
+        return ResponseEntity.ok(novelService.deleteNovelByReader(reader, novelId));
     }
 
     @PostMapping("/reader/{novelId}")

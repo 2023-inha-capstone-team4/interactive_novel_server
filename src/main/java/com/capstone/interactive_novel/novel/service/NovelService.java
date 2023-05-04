@@ -2,11 +2,13 @@ package com.capstone.interactive_novel.novel.service;
 
 import com.capstone.interactive_novel.common.service.S3Service;
 import com.capstone.interactive_novel.novel.domain.NovelEntity;
+import com.capstone.interactive_novel.novel.domain.NovelStatus;
 import com.capstone.interactive_novel.novel.dto.NovelDto;
 import com.capstone.interactive_novel.novel.repository.NovelRepository;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -69,5 +71,18 @@ public class NovelService {
                 .NovelImageUrl(novel.getNovelImageUrl())
                 .totalScore(novel.getTotalScore())
                 .build();
+    }
+
+    @Transactional
+    public String deleteNovelByReader(ReaderEntity reader, Long novelId) {
+        NovelEntity novel = novelRepository.findById(novelId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 소설입니다."));
+        if(novel.getReader().getId() != reader.getId()) {
+            throw new RuntimeException("사용자 정보가 일치하지 않습니다.");
+        }
+        novel.setNovelStatus(NovelStatus.DEACTIVATED);
+        novelRepository.save(novel);
+
+        return novel.getId() + ": " + NovelStatus.DEACTIVATED;
     }
 }
