@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,6 +34,12 @@ public class NovelDetailEntity {
 
     @Lob
     private String novelData;
+
+    @OneToMany
+    private List<NovelDetailImageEntity> imageList;
+
+    @OneToMany
+    private List<NovelDetailSoundEntity> soundList;
 
     public static NovelDetailEntity createNovelDetail(String novelDetailName, String novelDetailIntroduce, String imageUrl, NovelEntity novel, MultipartFile novelScriptFile) {
         return NovelDetailEntity.builder()
