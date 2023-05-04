@@ -1,5 +1,6 @@
 package com.capstone.interactive_novel.novel.controller;
 
+import com.capstone.interactive_novel.novel.dto.NovelDto;
 import com.capstone.interactive_novel.novel.service.NovelDetailService;
 import com.capstone.interactive_novel.novel.service.NovelService;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
@@ -17,11 +18,19 @@ public class NovelController {
     private final NovelDetailService novelDetailService;
 
     @PostMapping("/reader")
-    public ResponseEntity<?> createNovelByReader(@AuthenticationPrincipal ReaderEntity reader,
-                                                 @RequestPart MultipartFile file,
-                                                 @RequestPart String novelName,
-                                                 @RequestPart String novelIntroduce) {
+    public ResponseEntity<NovelDto> createNovelByReader(@AuthenticationPrincipal ReaderEntity reader,
+                                                        @RequestPart MultipartFile file,
+                                                        @RequestPart String novelName,
+                                                        @RequestPart String novelIntroduce) {
         return ResponseEntity.ok(novelService.createNovelByReader(reader, file, novelName, novelIntroduce));
+    }
+
+    @PostMapping("/reader/{novelId}/modify")
+    ResponseEntity<NovelDto> modifyNovelByReader(@AuthenticationPrincipal ReaderEntity reader,
+                                                 @PathVariable Long novelId,
+                                                 @RequestPart(required = false) MultipartFile file,
+                                                 @RequestPart(required = false) String novelIntroduce) {
+        return ResponseEntity.ok(novelService.modifyNovelByReader(reader, novelId, file, novelIntroduce));
     }
 
     @PostMapping("/reader/{novelId}")

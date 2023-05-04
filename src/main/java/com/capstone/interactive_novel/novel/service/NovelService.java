@@ -7,6 +7,7 @@ import com.capstone.interactive_novel.novel.repository.NovelRepository;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class NovelService {
     private final NovelRepository novelRepository;
     private final S3Service s3Service;
+    private static final String NOVEL_DOMAIN = "novel";
 
     public NovelDto createNovelByReader(ReaderEntity reader,
                                         MultipartFile file,
@@ -26,7 +28,7 @@ public class NovelService {
             throw new RuntimeException("소설 게시 권한이 없는 사용자입니다.");
         }
 
-        String imageUrl = s3Service.uploadImage(file, "novel", novelName);
+        String imageUrl = s3Service.uploadImage(file, NOVEL_DOMAIN, novelName);
         NovelEntity novel = NovelEntity.createNovelByReader(reader, novelName, novelIntroduce, imageUrl);
         novelRepository.save(novel);
 
@@ -38,6 +40,34 @@ public class NovelService {
                 .publisherType(novel.getNovelPublisherType())
                 .NovelImageUrl(imageUrl)
                 .totalScore(0L)
+                .build();
+    }
+
+    public NovelDto modifyNovelByReader(ReaderEntity reader,
+                                        Long novelId,
+                                        MultipartFile file,
+                                        String novelIntroduce) {
+        NovelEntity novel = novelRepository.findById(novelId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 소설입니다."));
+        if(novel.getReader().getId() != reader.getId()) {
+            throw new RuntimeException("사용자 정보가 일치하지 않습니다.");
+        }
+        if(!ObjectUtils.isEmpty(file)) {
+            novel.setNovelImageUrl(s3Service.uploadImage(file, NOVEL_DOMAIN, novel.getNovelName()));
+        }
+        if(!ObjectUtils.isEmpty(novelIntroduce)) {
+            novel.setNovelIntroduce(novelIntroduce);
+        }
+
+        novelRepository.save(novel);
+        return NovelDto.builder()
+                .id(novel.getId())
+                .novelName(novel.getNovelName())
+                .novelIntroduce(novel.getNovelIntroduce())
+                .publisherName(reader.getUsername())
+                .publisherType(novel.getNovelPublisherType())
+                .NovelImageUrl(novel.getNovelImageUrl())
+                .totalScore(novel.getTotalScore())
                 .build();
     }
 }
