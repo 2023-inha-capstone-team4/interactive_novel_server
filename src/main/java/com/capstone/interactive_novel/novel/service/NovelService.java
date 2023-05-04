@@ -72,7 +72,7 @@ public class NovelService {
                 .build();
     }
 
-    public String deleteNovelByReader(ReaderEntity reader, Long novelId) {
+    public String deactivateNovelByReader(ReaderEntity reader, Long novelId) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 소설입니다."));
         if(novel.getReader().getId() != reader.getId()) {

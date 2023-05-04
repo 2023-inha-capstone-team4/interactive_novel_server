@@ -36,7 +36,7 @@ public class NovelController {
     @PatchMapping("/reader/{novelId}/deactivate")
     ResponseEntity<String> deactivateNovelByReader(@AuthenticationPrincipal ReaderEntity reader,
                                                    @PathVariable Long novelId) {
-        return ResponseEntity.ok(novelService.deleteNovelByReader(reader, novelId));
+        return ResponseEntity.ok(novelService.deactivateNovelByReader(reader, novelId));
     }
 
     @PostMapping("/reader/{novelId}")
