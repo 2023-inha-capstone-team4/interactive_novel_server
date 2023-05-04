@@ -8,7 +8,6 @@ import com.capstone.interactive_novel.novel.repository.NovelRepository;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -73,7 +72,6 @@ public class NovelService {
                 .build();
     }
 
-    @Transactional
     public String deleteNovelByReader(ReaderEntity reader, Long novelId) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 소설입니다."));
