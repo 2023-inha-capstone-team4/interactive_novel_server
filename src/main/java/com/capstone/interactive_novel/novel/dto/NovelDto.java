@@ -11,7 +11,6 @@ public class NovelDto {
     private String novelName;
     private String novelIntroduce;
     private NovelPublisherType publisherType;
-    private long publisherId;
     private String publisherName;
     private String NovelImageUrl;
     private long totalScore;

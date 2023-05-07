@@ -1,5 +1,6 @@
 package com.capstone.interactive_novel.novel.service;
 
+import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.common.service.S3Service;
 import com.capstone.interactive_novel.novel.domain.NovelDetailEntity;
 import com.capstone.interactive_novel.novel.domain.NovelEntity;
@@ -10,6 +11,9 @@ import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import static com.capstone.interactive_novel.common.exception.ErrorCode.NOVEL_NOT_FOUND;
+import static com.capstone.interactive_novel.common.exception.ErrorCode.UNMATCHED_USER_INFO;
 
 @Service
 @RequiredArgsConstructor
@@ -25,10 +29,10 @@ public class NovelDetailService {
                                                     String novelDetailIntroduce,
                                                     MultipartFile novelScriptFile) {
         NovelEntity novel = novelRepository.findById(novelId)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 소설입니다."));
+                .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
 
         if(novel.getReader().getId() != reader.getId()) {
-            throw new RuntimeException("사용자 정보가 일치하지 않습니다.");
+            throw new INovelException(UNMATCHED_USER_INFO);
         }
 
         String imageUrl = s3Service.uploadImage(file, "novel", novel.getNovelName());

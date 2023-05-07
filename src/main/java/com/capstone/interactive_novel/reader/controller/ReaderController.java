@@ -1,9 +1,11 @@
 package com.capstone.interactive_novel.reader.controller;
 
+import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import com.capstone.interactive_novel.reader.service.ReaderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,17 +17,14 @@ public class ReaderController {
     private final ReaderService readerService;
 
     @PostMapping("/getAuthor")
-    public ResponseEntity<?> applyAuthorRole(@RequestHeader("Authorization") String token) {
-        boolean result = readerService.applyAuthorService(token);
-        return result ?
-                ResponseEntity.ok("권한 부여가 완료되었습니다.") :
-                ResponseEntity.ok("권한 부여가 실패되었습니다.");
+    public ResponseEntity<String> applyAuthorRole(@AuthenticationPrincipal ReaderEntity reader) {
+        return ResponseEntity.ok(readerService.applyAuthorService(reader));
     }
 
     @PostMapping("/modifyProfileImg")
-    public ResponseEntity<?> modifyProfileImg(@RequestHeader("Authorization") String token,
+    public ResponseEntity<?> modifyProfileImg(@AuthenticationPrincipal ReaderEntity reader,
                                               @RequestPart MultipartFile file,
                                               @RequestPart String domain) {
-        return ResponseEntity.ok(readerService.modifyProfileImg(token, file, domain));
+        return ResponseEntity.ok(readerService.modifyProfileImg(reader, file, domain));
     }
 }

@@ -1,6 +1,7 @@
 package com.capstone.interactive_novel.common.security;
 
 import com.capstone.interactive_novel.common.components.TokenComponents;
+import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
 import com.capstone.interactive_novel.publisher.repository.PublisherRepository;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
@@ -23,6 +24,8 @@ import org.springframework.util.StringUtils;
 import java.util.Date;
 import java.util.Optional;
 
+import static com.capstone.interactive_novel.common.exception.ErrorCode.USER_NOT_FOUND;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -42,8 +45,7 @@ public class TokenProvider {
     public JwtDto generateReaderToken(String email) {
         Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(email);
         if(optionalReader.isEmpty()) {
-            log.info("존재하지 않는 사용자입니다.");
-            return null;
+            throw new INovelException(USER_NOT_FOUND);
         }
         ReaderEntity reader = optionalReader.get();
 
@@ -53,8 +55,7 @@ public class TokenProvider {
     public JwtDto generatePublisherToken(String email) {
         Optional<PublisherEntity> optionalPublisher = publisherRepository.findByEmail(email);
         if(optionalPublisher.isEmpty()) {
-            log.info("존재하지 않는 사용자입니다.");
-            return null;
+            throw new INovelException(USER_NOT_FOUND);
         }
         PublisherEntity publisher = optionalPublisher.get();
 

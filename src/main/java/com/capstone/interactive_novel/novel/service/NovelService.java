@@ -1,5 +1,6 @@
 package com.capstone.interactive_novel.novel.service;
 
+import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.common.service.S3Service;
 import com.capstone.interactive_novel.novel.domain.NovelEntity;
 import com.capstone.interactive_novel.novel.domain.NovelStatus;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
 
 @RequiredArgsConstructor
 @Service
@@ -23,10 +26,10 @@ public class NovelService {
                                         String novelName,
                                         String novelIntroduce) {
         if(novelRepository.findByNovelName(novelName).isPresent()) {
-            throw new RuntimeException("이미 존재하는 소설명입니다.");
+            throw new INovelException(ALREADY_USING_NOVEL_NAME);
         }
         if(!reader.isAuthorServiceYn()) {
-            throw new RuntimeException("소설 게시 권한이 없는 사용자입니다.");
+            throw new INovelException(UNVERIFIED_USER);
         }
 
         String imageUrl = s3Service.uploadImage(file, NOVEL_DOMAIN, novelName);
@@ -49,9 +52,9 @@ public class NovelService {
                                         MultipartFile file,
                                         String novelIntroduce) {
         NovelEntity novel = novelRepository.findById(novelId)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 소설입니다."));
+                .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
         if(novel.getReader().getId() != reader.getId()) {
-            throw new RuntimeException("사용자 정보가 일치하지 않습니다.");
+            throw new INovelException(UNMATCHED_USER_INFO);
         }
         if(!ObjectUtils.isEmpty(file)) {
             novel.setNovelImageUrl(s3Service.uploadImage(file, NOVEL_DOMAIN, novel.getNovelName()));
@@ -74,9 +77,9 @@ public class NovelService {
 
     public String deactivateNovelByReader(ReaderEntity reader, Long novelId) {
         NovelEntity novel = novelRepository.findById(novelId)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 소설입니다."));
+                .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
         if(novel.getReader().getId() != reader.getId()) {
-            throw new RuntimeException("사용자 정보가 일치하지 않습니다.");
+            throw new INovelException(UNMATCHED_USER_INFO);
         }
         novel.setNovelStatus(NovelStatus.DEACTIVATED);
         novelRepository.save(novel);
