@@ -5,6 +5,7 @@ import com.capstone.interactive_novel.common.service.S3Service;
 import com.capstone.interactive_novel.novel.domain.NovelDetailEntity;
 import com.capstone.interactive_novel.novel.domain.NovelEntity;
 import com.capstone.interactive_novel.novel.dto.NovelDetailDto;
+import com.capstone.interactive_novel.novel.dto.NovelDetailMediaDto;
 import com.capstone.interactive_novel.novel.repository.NovelDetailRepository;
 import com.capstone.interactive_novel.novel.repository.NovelRepository;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
@@ -27,7 +28,8 @@ public class NovelDetailService {
                                                     MultipartFile file,
                                                     String novelDetailName,
                                                     String novelDetailIntroduce,
-                                                    MultipartFile novelScriptFile) {
+                                                    MultipartFile novelScriptFile,
+                                                    NovelDetailMediaDto mediaDto) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
 
@@ -36,7 +38,7 @@ public class NovelDetailService {
         }
 
         String imageUrl = s3Service.uploadImage(file, "novel", novel.getNovelName());
-        NovelDetailEntity novelDetail = NovelDetailEntity.createNovelDetail(novelDetailName, novelDetailIntroduce, imageUrl, novel, novelScriptFile);
+        NovelDetailEntity novelDetail = NovelDetailEntity.createNovelDetail(novelDetailName, novelDetailIntroduce, imageUrl, novel, novelScriptFile, mediaDto);
         novelDetailRepository.save(novelDetail);
 
         return NovelDetailDto.builder()
@@ -48,6 +50,7 @@ public class NovelDetailService {
                 .publisherName(reader.getUsername())
                 .novelImageUrl(imageUrl)
                 .totalScore(0L)
+                .mediaDto(mediaDto)
                 .build();
     }
 }

@@ -19,4 +19,5 @@ public class NovelDetailDto {
     private String publisherName;
     private String novelImageUrl;
     private long totalScore;
+    private NovelDetailMediaDto mediaDto;
 }

@@ -1,5 +1,6 @@
 package com.capstone.interactive_novel.novel.controller;
 
+import com.capstone.interactive_novel.novel.dto.NovelDetailMediaDto;
 import com.capstone.interactive_novel.novel.dto.NovelDto;
 import com.capstone.interactive_novel.novel.service.NovelDetailService;
 import com.capstone.interactive_novel.novel.service.NovelService;
@@ -45,7 +46,8 @@ public class NovelController {
                                                        @RequestPart MultipartFile file,
                                                        @RequestPart String novelDetailName,
                                                        @RequestPart String novelDetailIntroduce,
-                                                       @RequestPart MultipartFile novelScriptFile) {
-        return ResponseEntity.ok(novelDetailService.createNovelDetailByReader(reader, novelId, file, novelDetailName, novelDetailIntroduce, novelScriptFile));
+                                                       @RequestPart MultipartFile novelScriptFile,
+                                                       @RequestPart NovelDetailMediaDto mediaDto) {
+        return ResponseEntity.ok(novelDetailService.createNovelDetailByReader(reader, novelId, file, novelDetailName, novelDetailIntroduce, novelScriptFile, mediaDto));
     }
 }
