@@ -4,6 +4,7 @@ import com.capstone.interactive_novel.common.components.TokenComponents;
 import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
 import com.capstone.interactive_novel.publisher.repository.PublisherRepository;
+import com.capstone.interactive_novel.publisher.service.PublisherService;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import com.capstone.interactive_novel.reader.repository.ReaderRepository;
 import com.capstone.interactive_novel.reader.service.ReaderService;
@@ -38,9 +39,10 @@ public class TokenProvider {
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;
     private final ReaderService readerService;
+    private final PublisherService publisherService;
     private final ReaderRepository readerRepository;
     private final PublisherRepository publisherRepository;
-    private final TokenComponents tokenUtils;
+    private final TokenComponents tokenComponents;
 
     public JwtDto generateReaderToken(String email) {
         Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(email);
@@ -99,15 +101,20 @@ public class TokenProvider {
                 .build();
     }
 
-    public Authentication getAuthentication(String token) {
-        UserDetails userDetails = readerService.loadUserByUsername(tokenUtils.getEmail(token));
+    public Authentication getAuthenticationAboutReader(String token) {
+        UserDetails userDetails = readerService.loadUserByUsername(tokenComponents.getEmail(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+    public Authentication getAuthenticationAboutPublisher(String token) {
+        UserDetails userDetails = publisherService.loadUserByUsername(tokenComponents.getEmail(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     public boolean validateToken(String token) {
         if(!StringUtils.hasText(token)) return false;
 
-        var claims = tokenUtils.parseClaims(token);
+        var claims = tokenComponents.parseClaims(token);
         return !claims.getExpiration().before(new Date());
     }
 }

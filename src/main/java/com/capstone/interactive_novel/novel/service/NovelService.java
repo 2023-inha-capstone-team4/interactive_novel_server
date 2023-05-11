@@ -6,6 +6,7 @@ import com.capstone.interactive_novel.novel.domain.NovelEntity;
 import com.capstone.interactive_novel.novel.domain.NovelStatus;
 import com.capstone.interactive_novel.novel.dto.NovelDto;
 import com.capstone.interactive_novel.novel.repository.NovelRepository;
+import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
+import static com.capstone.interactive_novel.novel.domain.NovelStatus.FREE;
+import static com.capstone.interactive_novel.novel.domain.NovelStatus.PAY;
 
 @RequiredArgsConstructor
 @Service
@@ -20,6 +23,8 @@ public class NovelService {
     private final NovelRepository novelRepository;
     private final S3Service s3Service;
     private static final String NOVEL_DOMAIN = "novel";
+
+    // Reader 관련
 
     public NovelDto createNovelByReader(ReaderEntity reader,
                                         MultipartFile file,
@@ -86,4 +91,42 @@ public class NovelService {
 
         return novel.getId() + ": " + NovelStatus.DEACTIVATED;
     }
+
+    // Publisher 관련
+
+    public NovelDto createNovelByPublisher(PublisherEntity publisher,
+                                           MultipartFile file,
+                                           String novelName,
+                                           String novelIntroduce,
+                                           String payType) {
+        if(novelRepository.findByNovelName(novelName).isPresent()) {
+            throw new INovelException(ALREADY_USING_NOVEL_NAME);
+        }
+
+        NovelStatus novelStatus;
+        if(payType.equals(FREE.toString())) {
+            novelStatus = FREE;
+        }
+        else if(payType.equals(PAY.toString())) {
+            novelStatus = PAY;
+        }
+        else {
+            throw new INovelException(INVALID_PAY_TYPE);
+        }
+
+        String imageUrl = s3Service.uploadFile(file, NOVEL_DOMAIN, novelName);
+        NovelEntity novel = NovelEntity.createNovelByPublisher(publisher, novelName, novelIntroduce, imageUrl, novelStatus);
+        novelRepository.save(novel);
+
+        return NovelDto.builder()
+                .id(novel.getId())
+                .novelName(novelName)
+                .novelIntroduce(novelIntroduce)
+                .publisherName(publisher.getUsername())
+                .publisherType(novel.getNovelPublisherType())
+                .NovelImageUrl(imageUrl)
+                .totalScore(0L)
+                .build();
+    }
+
 }

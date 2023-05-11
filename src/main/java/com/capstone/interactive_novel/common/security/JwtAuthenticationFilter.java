@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.capstone.interactive_novel.common.exception.ErrorCode.INVALID_ACCESS_TOKEN;
-import static com.capstone.interactive_novel.common.exception.ErrorCode.TOKEN_NOT_FOUND;
+import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
+import static com.capstone.interactive_novel.common.type.Role.*;
 
 @Slf4j
 @Component
@@ -28,6 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String TOKEN_HEADER = "Authorization";
     private static final String TOKEN_PREFIX = "Bearer ";
     private final TokenProvider tokenProvider;
+    private final TokenComponents tokenComponents;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -52,7 +53,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        Authentication auth = this.tokenProvider.getAuthentication(token);
+        String role = tokenComponents.parseClaims(token).get("role").toString();
+        Authentication auth;
+        log.info(role);
+        if(role.contains(FREE.getKey()) || role.contains(JUNIOR.getKey())) {
+            auth = tokenProvider.getAuthenticationAboutReader(token);
+        }
+        else if(role.contains(PUBLISHER.getKey())) {
+            auth = tokenProvider.getAuthenticationAboutPublisher(token);
+        }
+        else {
+            setErrorResponse(response, INVALID_USER_AUTHENTICATION);
+            return;
+        }
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         log.info("[TOKEN] 만료 시간 전 정상 처리");

@@ -4,6 +4,7 @@ import com.capstone.interactive_novel.novel.dto.NovelDetailMediaDto;
 import com.capstone.interactive_novel.novel.dto.NovelDto;
 import com.capstone.interactive_novel.novel.service.NovelDetailService;
 import com.capstone.interactive_novel.novel.service.NovelService;
+import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ import java.util.List;
 public class NovelController {
     private final NovelService novelService;
     private final NovelDetailService novelDetailService;
+
+    // Reader 관련
 
     @PostMapping("/reader")
     public ResponseEntity<NovelDto> createNovelByReader(@AuthenticationPrincipal ReaderEntity reader,
@@ -60,5 +63,16 @@ public class NovelController {
                                                                         @RequestPart MultipartFile[] files,
                                                                         @RequestPart String fileType) {
         return ResponseEntity.ok(novelDetailService.uploadFilesByReader(reader, novelId, novelDetailId, files, fileType));
+    }
+
+    // Publisher 관련
+
+    @PostMapping("/publisher")
+    public ResponseEntity<NovelDto> createNovelByPublisher(@AuthenticationPrincipal PublisherEntity publisher,
+                                                           @RequestPart MultipartFile file,
+                                                           @RequestPart String novelName,
+                                                           @RequestPart String novelIntroduce,
+                                                           @RequestPart String payType) {
+        return ResponseEntity.ok(novelService.createNovelByPublisher(publisher, file, novelName, novelIntroduce, payType));
     }
 }

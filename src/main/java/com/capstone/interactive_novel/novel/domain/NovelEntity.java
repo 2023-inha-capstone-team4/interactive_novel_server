@@ -49,4 +49,16 @@ public class NovelEntity {
                 .totalScore(0L)
                 .build();
     }
+
+    public static NovelEntity createNovelByPublisher(PublisherEntity publisher, String novelName, String novelIntroduce, String imageUrl, NovelStatus novelStatus) {
+        return NovelEntity.builder()
+                .publisher(publisher)
+                .novelName(novelName)
+                .novelIntroduce(novelIntroduce)
+                .NovelImageUrl(imageUrl)
+                .novelStatus(novelStatus)
+                .novelPublisherType(NovelPublisherType.PUBLISHER)
+                .totalScore(0L)
+                .build();
+    }
 }

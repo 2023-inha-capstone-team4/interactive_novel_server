@@ -34,6 +34,8 @@ public enum ErrorCode {
     // 유효성 에러
     INVALID_ACCESS_TOKEN("액세스 토큰이 유효하지 않습니다."),
     INVALID_FILE_TYPE("유효하지 않은 파일 타입입니다."),
+    INVALID_PAY_TYPE("유효하지 않은 요금제 방식입니다."),
+    INVALID_USER_AUTHENTICATION("인증 정보가 유효하지 않습니다."),
 
     // 불일치 에러
     UNMATCHED_NOVEL_INFO("소설 정보가 일치하지 않습니다."),

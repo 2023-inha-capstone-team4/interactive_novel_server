@@ -17,6 +17,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorResponseDto> handleHttpRequestNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.error("HttpRequestMethodNotSupportedException: " + e.getMessage());
+        e.printStackTrace();
         return ResponseEntity.internalServerError().body(
             ErrorResponseDto.builder()
                     .errorCode(WRONG_METHOD_OR_URL)
@@ -27,6 +28,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AmazonS3Exception.class)
     public ResponseEntity<ErrorResponseDto> handleAmazonS3Exception(AmazonS3Exception e) {
         log.error("AmazonS3Exception: " + e.getMessage());
+        e.printStackTrace();
         return ResponseEntity.internalServerError().body(
                 ErrorResponseDto.builder()
                         .errorCode(AMAZON_S3_ERROR)
@@ -37,6 +39,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(INovelException.class)
     public ResponseEntity<ErrorResponseDto> handleINovelException(INovelException e) {
         log.error("INovelException: " + e.getErrorMessage());
+        e.printStackTrace();
         return ResponseEntity.internalServerError().body(
                 ErrorResponseDto.builder()
                         .errorCode(e.getErrorCode())
@@ -47,6 +50,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleException(Exception e) {
         log.error("Exception: " + e.getMessage());
+        e.printStackTrace();
         return ResponseEntity.internalServerError().body(
                 ErrorResponseDto.builder()
                         .errorCode(INTERNAL_ERROR)

@@ -41,7 +41,7 @@ public class AuthService {
             return null;
         }
 
-        Authentication authentication = tokenProvider.getAuthentication(refreshToken);
+        Authentication authentication = tokenProvider.getAuthenticationAboutReader(refreshToken);
 
         return tokenProvider.generateReaderToken(authentication.getName());
     }
