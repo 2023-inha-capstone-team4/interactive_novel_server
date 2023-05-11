@@ -39,7 +39,7 @@ public class ReaderService implements UserDetailsService {
                 .orElseThrow(() -> new INovelException(EMAIL_NOT_FOUND));
     }
 
-    public boolean register(ReaderDto.SignUp parameter) {
+    public void register(ReaderDto.SignUp parameter) {
         Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(parameter.getEmail());
         if(optionalReader.isPresent()) {
             throw new INovelException(ALREADY_USING_EMAIL);
@@ -58,29 +58,20 @@ public class ReaderService implements UserDetailsService {
                          "<div><a target='_blank' href='http://localhost:8080/sign/email-auth?id=" +
                          uuid +"'> Verify </a></div>";
         mailComponents.sendMail(email, subject, message);
-        return true;
     }
 
-    public ReaderEntity login(ReaderDto.SignIn parameter) {
-        Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(parameter.getEmail());
-        if(optionalReader.isEmpty()) {
-            throw new INovelException(EMAIL_NOT_FOUND);
-        }
-        ReaderEntity reader = optionalReader.get();
-        System.out.println(reader.getEmail());
+    public String login(ReaderDto.SignIn parameter) {
+        ReaderEntity reader = readerRepository.findByEmail(parameter.getEmail())
+                .orElseThrow(() -> new INovelException(EMAIL_NOT_FOUND));
 
-        System.out.println(reader.getPassword());
-        System.out.println(passwordEncoder.encode(reader.getPassword()));
-        System.out.println(parameter.getPassword());
         if(!passwordEncoder.matches(parameter.getPassword(), reader.getPassword())) {
             throw new INovelException(UNMATCHED_PASSWORD);
         }
-
         if(!reader.isEmailAuthYn()) {
             throw new INovelException(UNVERIFIED_EMAIL);
         }
         log.info("로그인에 성공하였습니다.");
-        return reader;
+        return reader.getEmail();
     }
 
     public boolean emailAuth(String uuid) {

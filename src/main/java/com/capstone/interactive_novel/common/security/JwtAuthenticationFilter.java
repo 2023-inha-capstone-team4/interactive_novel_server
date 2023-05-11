@@ -62,6 +62,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         else if(role.contains(PUBLISHER.getKey())) {
             auth = tokenProvider.getAuthenticationAboutPublisher(token);
         }
+        else if(role.contains(UNCERTIFIED.getKey())) {
+            setErrorResponse(response, UNVERIFIED_EMAIL);
+            return;
+        }
         else {
             setErrorResponse(response, INVALID_USER_AUTHENTICATION);
             return;

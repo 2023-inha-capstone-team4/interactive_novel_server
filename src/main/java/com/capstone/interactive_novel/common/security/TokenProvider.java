@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
-import java.util.Optional;
 
 import static com.capstone.interactive_novel.common.exception.ErrorCode.USER_NOT_FOUND;
 
@@ -45,21 +44,15 @@ public class TokenProvider {
     private final TokenComponents tokenComponents;
 
     public JwtDto generateReaderToken(String email) {
-        Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(email);
-        if(optionalReader.isEmpty()) {
-            throw new INovelException(USER_NOT_FOUND);
-        }
-        ReaderEntity reader = optionalReader.get();
+        ReaderEntity reader = readerRepository.findByEmail(email)
+                .orElseThrow(() -> new INovelException(USER_NOT_FOUND));
 
         return setJwtDto(email, reader.getUsername(), reader.getRole().getKey());
     }
 
     public JwtDto generatePublisherToken(String email) {
-        Optional<PublisherEntity> optionalPublisher = publisherRepository.findByEmail(email);
-        if(optionalPublisher.isEmpty()) {
-            throw new INovelException(USER_NOT_FOUND);
-        }
-        PublisherEntity publisher = optionalPublisher.get();
+        PublisherEntity publisher = publisherRepository.findByEmail(email)
+                .orElseThrow(() -> new INovelException(USER_NOT_FOUND));
 
         return setJwtDto(email, publisher.getUsername(), publisher.getRole().getKey());
     }
