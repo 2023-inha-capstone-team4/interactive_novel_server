@@ -1,6 +1,6 @@
 package com.capstone.interactive_novel.novel.domain;
 
-import com.capstone.interactive_novel.common.utils.FileConvertUtils;
+import com.capstone.interactive_novel.common.utils.FileUtils;
 import com.capstone.interactive_novel.novel.dto.NovelDetailMediaDto;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,14 +33,14 @@ public class NovelDetailEntity {
     @Enumerated(EnumType.STRING)
     private NovelPublisherType novelPublisherType;
 
+    @ElementCollection(fetch = FetchType.LAZY)
+    List<String> imageList;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    List<String> soundList;
+
     @Lob
     private String novelData;
-
-    @OneToMany
-    private List<NovelDetailImageEntity> imageList;
-
-    @OneToMany
-    private List<NovelDetailSoundEntity> soundList;
 
     public static NovelDetailEntity createNovelDetail(String novelDetailName, String novelDetailIntroduce, String imageUrl, NovelEntity novel, MultipartFile novelScriptFile, NovelDetailMediaDto mediaDto) {
         return NovelDetailEntity.builder()
@@ -50,7 +50,7 @@ public class NovelDetailEntity {
                 .novelPublisherType(NovelPublisherType.READER)
                 .novel(novel)
                 .detailScore(0L)
-                .novelData(FileConvertUtils.fileToLobConverter(novelScriptFile))
+                .novelData(FileUtils.fileToLobConverter(novelScriptFile))
                 .imageList(mediaDto.getImagelist())
                 .soundList(mediaDto.getSoundList())
                 .build();

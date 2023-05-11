@@ -1,6 +1,6 @@
 package com.capstone.interactive_novel.reader.domain;
 
-import com.capstone.interactive_novel.common.domain.Role;
+import com.capstone.interactive_novel.common.type.Role;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.capstone.interactive_novel.common.domain.Role.JUNIOR;
+import static com.capstone.interactive_novel.common.type.Role.JUNIOR;
 
 @Entity(name = "READER")
 @Getter

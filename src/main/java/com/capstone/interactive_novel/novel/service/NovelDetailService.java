@@ -2,6 +2,8 @@ package com.capstone.interactive_novel.novel.service;
 
 import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.common.service.S3Service;
+import com.capstone.interactive_novel.common.type.FileDomain;
+import com.capstone.interactive_novel.common.utils.FileUtils;
 import com.capstone.interactive_novel.novel.domain.NovelDetailEntity;
 import com.capstone.interactive_novel.novel.domain.NovelEntity;
 import com.capstone.interactive_novel.novel.dto.NovelDetailDto;
@@ -13,8 +15,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.capstone.interactive_novel.common.exception.ErrorCode.NOVEL_NOT_FOUND;
-import static com.capstone.interactive_novel.common.exception.ErrorCode.UNMATCHED_USER_INFO;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
+import static com.capstone.interactive_novel.common.type.FileType.IMAGE;
+import static com.capstone.interactive_novel.common.type.FileType.SOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +43,7 @@ public class NovelDetailService {
             throw new INovelException(UNMATCHED_USER_INFO);
         }
 
-        String imageUrl = s3Service.uploadImage(file, "novel", novel.getNovelName());
+        String imageUrl = s3Service.uploadFile(file, "novel", novel.getNovelName());
         NovelDetailEntity novelDetail = NovelDetailEntity.createNovelDetail(novelDetailName, novelDetailIntroduce, imageUrl, novel, novelScriptFile, mediaDto);
         novelDetailRepository.save(novelDetail);
 
@@ -52,5 +58,45 @@ public class NovelDetailService {
                 .totalScore(0L)
                 .mediaDto(mediaDto)
                 .build();
+    }
+
+    public List<String> uploadFilesByReader(ReaderEntity reader,
+                                            Long novelId,
+                                            Long novelDetailId,
+                                            MultipartFile[] files,
+                                            String fileType) {
+        NovelEntity novel = novelRepository.findById(novelId)
+                .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
+        NovelDetailEntity novelDetail = novelDetailRepository.findById(novelDetailId)
+                .orElseThrow(() -> new INovelException(NOVEL_DETAIL_NOT_FOUND));
+        if(novel.getReader().getId() != reader.getId()) {
+            throw new INovelException(UNMATCHED_USER_INFO);
+        }
+        if(novelDetail.getNovel().getId() != novelId) {
+            throw new INovelException(UNMATCHED_NOVEL_INFO);
+        }
+
+        List<String> fileList = new ArrayList<>();
+
+        if(fileType.toLowerCase().equals(IMAGE.getFileType())) {
+            for (MultipartFile file : files) {
+                if(!FileUtils.checkExtension(file, IMAGE.getAllowedFileType())) {
+                    throw new INovelException(WRONG_FILE_EXTENSION);
+                }
+                fileList.add(s3Service.uploadFile(file, FileDomain.NOVEL_IMAGE_DOMAIN.getDescription(), String.valueOf(novel.getId())));
+            }
+        }
+        else if(fileType.toLowerCase().equals(SOUND.getFileType())) {
+            for (MultipartFile file : files) {
+                if(!FileUtils.checkExtension(file, SOUND.getAllowedFileType())) {
+                    throw new INovelException(WRONG_FILE_EXTENSION);
+                }
+                fileList.add(s3Service.uploadFile(file, FileDomain.NOVEL_SOUND_DOMAIN.getDescription(), String.valueOf(novel.getId())));
+            }
+        }
+        else {
+            throw new INovelException(INVALID_FILE_TYPE);
+        }
+        return fileList;
     }
 }

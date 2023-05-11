@@ -21,7 +21,7 @@ public class S3Service {
 
     private final AmazonS3Client amazonS3Client;
 
-    public String uploadImage(MultipartFile file, String domain, String domainInfo) {
+    public String uploadFile(MultipartFile file, String domain, String domainInfo) {
         String fileName = file.getOriginalFilename();
         String fileUrl = "https://" + bucket + "/" + domain + "/" + domainInfo + "/" + UUID.randomUUID();
 

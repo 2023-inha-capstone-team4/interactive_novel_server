@@ -1,4 +1,4 @@
-package com.capstone.interactive_novel.common.domain;
+package com.capstone.interactive_novel.common.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -4,7 +4,7 @@ import com.capstone.interactive_novel.common.components.MailComponents;
 import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.common.service.S3Service;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
-import com.capstone.interactive_novel.common.domain.Role;
+import com.capstone.interactive_novel.common.type.Role;
 import com.capstone.interactive_novel.reader.dto.ReaderDto;
 import com.capstone.interactive_novel.reader.repository.ReaderRepository;
 import lombok.RequiredArgsConstructor;
@@ -108,7 +108,7 @@ public class ReaderService implements UserDetailsService {
     }
 
     public ReaderDto.profileImg modifyProfileImg(ReaderEntity reader, MultipartFile file, String domain) {
-        String imageUrl = s3Service.uploadImage(file, "profile", String.valueOf(reader.getId()));
+        String imageUrl = s3Service.uploadFile(file, "profile", String.valueOf(reader.getId()));
         reader.setProfileImgUrl(imageUrl);
         readerRepository.save(reader);
 

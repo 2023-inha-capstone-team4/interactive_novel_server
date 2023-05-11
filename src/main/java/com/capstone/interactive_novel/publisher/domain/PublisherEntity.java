@@ -1,6 +1,6 @@
 package com.capstone.interactive_novel.publisher.domain;
 
-import com.capstone.interactive_novel.common.domain.Role;
+import com.capstone.interactive_novel.common.type.Role;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

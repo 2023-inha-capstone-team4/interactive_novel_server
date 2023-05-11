@@ -1,6 +1,6 @@
 package com.capstone.interactive_novel.publisher.dto;
 
-import com.capstone.interactive_novel.common.domain.Role;
+import com.capstone.interactive_novel.common.type.Role;
 import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
 import lombok.Data;
 

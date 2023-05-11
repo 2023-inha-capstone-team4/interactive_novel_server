@@ -15,7 +15,7 @@ import javax.persistence.*;
 public class NovelEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @ManyToOne
     private ReaderEntity reader;

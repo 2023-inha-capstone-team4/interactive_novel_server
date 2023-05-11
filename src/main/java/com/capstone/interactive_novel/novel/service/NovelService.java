@@ -32,7 +32,7 @@ public class NovelService {
             throw new INovelException(UNVERIFIED_USER);
         }
 
-        String imageUrl = s3Service.uploadImage(file, NOVEL_DOMAIN, novelName);
+        String imageUrl = s3Service.uploadFile(file, NOVEL_DOMAIN, novelName);
         NovelEntity novel = NovelEntity.createNovelByReader(reader, novelName, novelIntroduce, imageUrl);
         novelRepository.save(novel);
 
@@ -57,7 +57,7 @@ public class NovelService {
             throw new INovelException(UNMATCHED_USER_INFO);
         }
         if(!ObjectUtils.isEmpty(file)) {
-            novel.setNovelImageUrl(s3Service.uploadImage(file, NOVEL_DOMAIN, novel.getNovelName()));
+            novel.setNovelImageUrl(s3Service.uploadFile(file, NOVEL_DOMAIN, novel.getNovelName()));
         }
         if(!ObjectUtils.isEmpty(novelIntroduce)) {
             novel.setNovelIntroduce(novelIntroduce);

@@ -1,7 +1,7 @@
 package com.capstone.interactive_novel.reader.dto;
 
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
-import com.capstone.interactive_novel.common.domain.Role;
+import com.capstone.interactive_novel.common.type.Role;
 import lombok.Builder;
 import lombok.Data;
 

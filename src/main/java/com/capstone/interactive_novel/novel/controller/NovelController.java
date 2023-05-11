@@ -11,6 +11,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/novel")
@@ -49,5 +51,14 @@ public class NovelController {
                                                        @RequestPart MultipartFile novelScriptFile,
                                                        @RequestPart NovelDetailMediaDto mediaDto) {
         return ResponseEntity.ok(novelDetailService.createNovelDetailByReader(reader, novelId, file, novelDetailName, novelDetailIntroduce, novelScriptFile, mediaDto));
+    }
+
+    @PostMapping("/reader/{novelId}/{novelDetailId}/uploadFile")
+    public ResponseEntity<List<String>> uploadFileOnNovelDetailByReader(@AuthenticationPrincipal ReaderEntity reader,
+                                                                        @PathVariable Long novelId,
+                                                                        @PathVariable Long novelDetailId,
+                                                                        @RequestPart MultipartFile[] files,
+                                                                        @RequestPart String fileType) {
+        return ResponseEntity.ok(novelDetailService.uploadFilesByReader(reader, novelId, novelDetailId, files, fileType));
     }
 }
