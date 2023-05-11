@@ -42,7 +42,7 @@ public class NovelDetailEntity {
     @Lob
     private String novelData;
 
-    public static NovelDetailEntity createNovelDetail(String novelDetailName, String novelDetailIntroduce, String imageUrl, NovelEntity novel, MultipartFile novelScriptFile, NovelDetailMediaDto mediaDto) {
+    public static NovelDetailEntity setNovelDetail(String novelDetailName, String novelDetailIntroduce, String imageUrl, NovelEntity novel, MultipartFile novelScriptFile, NovelDetailMediaDto mediaDto) {
         return NovelDetailEntity.builder()
                 .novelDetailName(novelDetailName)
                 .novelDetailIntroduce(novelDetailIntroduce)

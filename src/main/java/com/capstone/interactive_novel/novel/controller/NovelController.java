@@ -48,9 +48,9 @@ public class NovelController {
                                                        @RequestPart MultipartFile file,
                                                        @RequestPart String novelDetailName,
                                                        @RequestPart String novelDetailIntroduce,
-                                                       @RequestPart MultipartFile novelScriptFile,
+                                                       @RequestPart MultipartFile novelDataFile,
                                                        @RequestPart NovelDetailMediaDto mediaDto) {
-        return ResponseEntity.ok(novelDetailService.createNovelDetailByReader(reader, novelId, file, novelDetailName, novelDetailIntroduce, novelScriptFile, mediaDto));
+        return ResponseEntity.ok(novelDetailService.createNovelDetailByReader(reader, novelId, file, novelDetailName, novelDetailIntroduce, novelDataFile, mediaDto));
     }
 
     @PostMapping("/reader/{novelId}/{novelDetailId}/uploadFile")

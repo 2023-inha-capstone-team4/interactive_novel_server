@@ -34,7 +34,7 @@ public class NovelDetailService {
                                                     MultipartFile file,
                                                     String novelDetailName,
                                                     String novelDetailIntroduce,
-                                                    MultipartFile novelScriptFile,
+                                                    MultipartFile novelDataFile,
                                                     NovelDetailMediaDto mediaDto) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
@@ -44,7 +44,7 @@ public class NovelDetailService {
         }
 
         String imageUrl = s3Service.uploadFile(file, "novel", novel.getNovelName());
-        NovelDetailEntity novelDetail = NovelDetailEntity.createNovelDetail(novelDetailName, novelDetailIntroduce, imageUrl, novel, novelScriptFile, mediaDto);
+        NovelDetailEntity novelDetail = NovelDetailEntity.setNovelDetail(novelDetailName, novelDetailIntroduce, imageUrl, novel, novelDataFile, mediaDto);
         novelDetailRepository.save(novelDetail);
 
         return NovelDetailDto.builder()
