@@ -83,7 +83,7 @@ public class NovelDetailService {
                 if(!FileUtils.checkExtension(file, IMAGE.getAllowedFileType())) {
                     throw new INovelException(WRONG_FILE_EXTENSION);
                 }
-                fileList.add(s3Service.uploadFile(file, FileDomain.NOVEL_IMAGE_DOMAIN.getDescription(), String.valueOf(novel.getId())));
+                fileList.add(s3Service.uploadFile(file, FileDomain.NOVEL_IMAGE_DOMAIN.getDescription(), novel.getId() + "/" + novelDetail.getId()));
             }
         }
         else if(fileType.toLowerCase().equals(SOUND.getFileType())) {
@@ -91,7 +91,7 @@ public class NovelDetailService {
                 if(!FileUtils.checkExtension(file, SOUND.getAllowedFileType())) {
                     throw new INovelException(WRONG_FILE_EXTENSION);
                 }
-                fileList.add(s3Service.uploadFile(file, FileDomain.NOVEL_SOUND_DOMAIN.getDescription(), String.valueOf(novel.getId())));
+                fileList.add(s3Service.uploadFile(file, FileDomain.NOVEL_SOUND_DOMAIN.getDescription(), novel.getId() + "/" + novelDetail.getId()));
             }
         }
         else {
