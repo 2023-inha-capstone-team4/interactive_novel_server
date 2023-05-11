@@ -22,19 +22,18 @@ public class S3Service {
     private final AmazonS3Client amazonS3Client;
 
     public String uploadFile(MultipartFile file, String domain, String domainInfo) {
-        String fileName = file.getOriginalFilename();
-        String fileUrl = "https://" + bucket + "/" + domain + "/" + domainInfo + "/" + UUID.randomUUID();
+        String fileUrl = bucket + "/" + domain + "/" + domainInfo + "/" + UUID.randomUUID().toString().replace("-", "");
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(file.getContentType());
         metadata.setContentLength(file.getSize());
 
         try {
-            amazonS3Client.putObject(bucket, fileName, file.getInputStream(), metadata);
+            amazonS3Client.putObject(bucket, fileUrl, file.getInputStream(), metadata);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         log.info("파일이 정상적으로 업로드 되었습니다.");
-        return fileUrl;
+        return amazonS3Client.getUrl(bucket, fileUrl).toString();
     }
 }
