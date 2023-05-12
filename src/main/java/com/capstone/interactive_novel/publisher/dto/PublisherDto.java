@@ -45,4 +45,22 @@ public class PublisherDto {
                     .build();
         }
     }
+
+    @Data
+    @Builder
+    public static class view {
+        private long id;
+        private String email;
+        private String username;
+        private String imageUrl;
+
+        public static PublisherDto.view of(Long id, String email, String username, String imageUrl) {
+            return PublisherDto.view.builder()
+                    .id(id)
+                    .email(email)
+                    .username(username)
+                    .imageUrl(imageUrl)
+                    .build();
+        }
+    }
 }

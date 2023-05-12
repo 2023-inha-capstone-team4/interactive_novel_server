@@ -105,5 +105,9 @@ public class ReaderService implements UserDetailsService {
 
         return ReaderDto.profileImg.of(reader.getId(), reader.getEmail(), reader.getUsername(), imageUrl);
     }
+
+    public ReaderDto.view viewReaderInfo(ReaderEntity reader) {
+        return ReaderDto.view.of(reader.getId(), reader.getEmail(), reader.getUsername(), reader.getProfileImgUrl(), reader.getInterlock(), reader.getRole().toString(),reader.isAuthorServiceYn());
+    }
 }
 

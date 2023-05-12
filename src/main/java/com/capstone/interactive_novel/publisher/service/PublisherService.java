@@ -60,4 +60,8 @@ public class PublisherService implements UserDetailsService {
 
         return PublisherDto.profileImg.of(publisher.getId(), publisher.getEmail(), publisher.getUsername(), imageUrl);
     }
+
+    public PublisherDto.view viewPublisherInfo(PublisherEntity publisher) {
+        return PublisherDto.view.of(publisher.getId(), publisher.getEmail(), publisher.getUsername(), publisher.getProfileImgUrl());
+    }
 }

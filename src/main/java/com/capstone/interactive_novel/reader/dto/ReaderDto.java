@@ -34,14 +34,38 @@ public class ReaderDto {
         private long id;
         private String email;
         private String username;
-        private String url;
+        private String imageUrl;
 
-        public static ReaderDto.profileImg of(Long id, String email, String username, String url) {
+        public static ReaderDto.profileImg of(Long id, String email, String username, String imageUrl) {
             return profileImg.builder()
                     .id(id)
                     .email(email)
                     .username(username)
-                    .url(url)
+                    .imageUrl(imageUrl)
+                    .build();
+        }
+    }
+
+    @Data
+    @Builder
+    public static class view {
+        private long id;
+        private String email;
+        private String username;
+        private String imageUrl;
+        private String interlock;
+        private String isPaid;
+        private boolean isAuthor;
+
+        public static ReaderDto.view of(Long id, String email, String username, String imageUrl, String interlock, String isPaid, boolean isAuthor) {
+            return view.builder()
+                    .id(id)
+                    .email(email)
+                    .username(username)
+                    .imageUrl(imageUrl)
+                    .interlock(interlock)
+                    .isPaid(isPaid)
+                    .isAuthor(isAuthor)
                     .build();
         }
     }
