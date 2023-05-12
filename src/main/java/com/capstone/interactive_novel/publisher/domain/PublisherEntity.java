@@ -56,7 +56,7 @@ public class PublisherEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return userName;
     }
 
     @Override
