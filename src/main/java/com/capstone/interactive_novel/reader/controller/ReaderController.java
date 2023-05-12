@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
-@RequestMapping("/member")
+@RequestMapping("/reader")
 @RequiredArgsConstructor
 public class ReaderController {
     private final ReaderService readerService;
@@ -23,8 +23,7 @@ public class ReaderController {
 
     @PostMapping("/modifyProfileImg")
     public ResponseEntity<?> modifyProfileImg(@AuthenticationPrincipal ReaderEntity reader,
-                                              @RequestPart MultipartFile file,
-                                              @RequestPart String domain) {
-        return ResponseEntity.ok(readerService.modifyProfileImg(reader, file, domain));
+                                              @RequestPart MultipartFile file) {
+        return ResponseEntity.ok(readerService.modifyReaderProfileImg(reader, file));
     }
 }

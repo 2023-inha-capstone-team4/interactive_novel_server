@@ -31,16 +31,16 @@ public class ReaderDto {
     @Data
     @Builder
     public static class profileImg {
+        private long id;
         private String email;
         private String username;
-        private String domain;
         private String url;
 
-        public static ReaderDto.profileImg of(String email, String username, String domain, String url) {
+        public static ReaderDto.profileImg of(Long id, String email, String username, String url) {
             return profileImg.builder()
+                    .id(id)
                     .email(email)
                     .username(username)
-                    .domain(domain)
                     .url(url)
                     .build();
         }

@@ -47,14 +47,14 @@ public class TokenProvider {
         ReaderEntity reader = readerRepository.findByEmail(email)
                 .orElseThrow(() -> new INovelException(USER_NOT_FOUND));
 
-        return setJwtDto(email, reader.getUsername(), reader.getRole().getKey());
+        return setJwtDto(email, reader.getEmail(), reader.getRole().getKey());
     }
 
     public JwtDto generatePublisherToken(String email) {
         PublisherEntity publisher = publisherRepository.findByEmail(email)
                 .orElseThrow(() -> new INovelException(USER_NOT_FOUND));
 
-        return setJwtDto(email, publisher.getUsername(), publisher.getRole().getKey());
+        return setJwtDto(email, publisher.getEmail(), publisher.getRole().getKey());
     }
     public JwtDto generateOAuthUserToken(OAuth2User oAuth2User) {
         String email = oAuth2User.getAttribute("email");

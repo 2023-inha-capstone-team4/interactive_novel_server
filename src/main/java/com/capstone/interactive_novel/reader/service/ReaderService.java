@@ -98,12 +98,12 @@ public class ReaderService implements UserDetailsService {
         return reader.getId() + ": " + reader.isAuthorServiceYn();
     }
 
-    public ReaderDto.profileImg modifyProfileImg(ReaderEntity reader, MultipartFile file, String domain) {
-        String imageUrl = s3Service.uploadFile(file, "profile", String.valueOf(reader.getId()));
+    public ReaderDto.profileImg modifyReaderProfileImg(ReaderEntity reader, MultipartFile file) {
+        String imageUrl = s3Service.uploadFile(file, "profile/reader", String.valueOf(reader.getId()));
         reader.setProfileImgUrl(imageUrl);
         readerRepository.save(reader);
 
-        return ReaderDto.profileImg.of(reader.getEmail(), reader.getUsername(), domain, imageUrl);
+        return ReaderDto.profileImg.of(reader.getId(), reader.getEmail(), reader.getUsername(), imageUrl);
     }
 }
 
