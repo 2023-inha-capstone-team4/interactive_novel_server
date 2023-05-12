@@ -27,6 +27,7 @@ public enum ErrorCode {
     NOVEL_NOT_FOUND("해당하는 소설을 찾을 수 없습니다."),
     NOVEL_BOOKMARK_LIST_NOT_FOUND("북마크 한 소설을 찾을 수 없습니다."),
     NOVEL_DETAIL_NOT_FOUND("해당하는 소설 회차를 찾을 수 없습니다."),
+    PUBLISHER_BOOKMARK_LIST_NOT_FOUND("북마크 한 작가를 찾을 수 없습니다."),
     READER_BOOKMARK_LIST_NOT_FOUND("북마크 한 독자를 찾을 수 없습니다"),
     TOKEN_NOT_FOUND("액세스 토큰을 찾을 수 없습니다."),
     USER_NOT_FOUND("해당하는 사용자를 찾을 수 없습니다."),

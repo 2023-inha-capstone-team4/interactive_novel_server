@@ -38,6 +38,8 @@ public class PublisherEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private String profileImgUrl;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<String> roles = new ArrayList<>();

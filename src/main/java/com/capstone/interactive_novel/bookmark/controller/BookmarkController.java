@@ -1,6 +1,7 @@
 package com.capstone.interactive_novel.bookmark.controller;
 
 import com.capstone.interactive_novel.bookmark.dto.BookmarkNovelDto;
+import com.capstone.interactive_novel.bookmark.dto.BookmarkPublisherDto;
 import com.capstone.interactive_novel.bookmark.dto.BookmarkReaderDto;
 import com.capstone.interactive_novel.bookmark.service.BookmarkService;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
@@ -52,6 +53,24 @@ public class BookmarkController {
     @GetMapping("/reader")
     public ResponseEntity<List<BookmarkReaderDto>> viewAllBookmarkedReaderList(@AuthenticationPrincipal ReaderEntity reader) {
         return ResponseEntity.ok(bookmarkService.viewAllBookmarkedReaderList(reader));
+    }
+
+    @PostMapping("/publisher/{publisherId}/set")
+    public ResponseEntity<Long> bookmarkPublisher(@AuthenticationPrincipal ReaderEntity reader,
+                                                  @PathVariable Long publisherId) {
+        bookmarkService.bookmarkPublisher(reader, publisherId);
+        return ResponseEntity.created(URI.create("/bookmark/publisher/" + publisherId)).build();
+    }
+
+    @GetMapping("/publisher/{publisherId}")
+    public ResponseEntity<Boolean> isBookmarkedPublisher(@AuthenticationPrincipal ReaderEntity reader,
+                                                         @PathVariable Long publisherId) {
+        return ResponseEntity.ok(bookmarkService.isBookmarkedPublisher(reader, publisherId));
+    }
+
+    @GetMapping("/publisher")
+    public ResponseEntity<List<BookmarkPublisherDto>> viewAllBookmarkedPublisherList(@AuthenticationPrincipal ReaderEntity reader) {
+        return ResponseEntity.ok(bookmarkService.viewAllBookmarkedPublisherList(reader));
     }
 
 }

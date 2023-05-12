@@ -8,5 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface PublisherRepository extends JpaRepository<PublisherEntity, String> {
-    Optional<PublisherEntity> findByEmail (String email);
+    Optional<PublisherEntity> findById(long id);
+    Optional<PublisherEntity> findByEmail(String email);
+
 }
