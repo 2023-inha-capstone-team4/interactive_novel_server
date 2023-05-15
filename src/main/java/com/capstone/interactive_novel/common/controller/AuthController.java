@@ -33,7 +33,7 @@ public class AuthController {
         return ResponseEntity.ok(parameter.getEmail());
     }
 
-    @GetMapping("/sign/in/reader")
+    @PostMapping("/sign/in/reader")
     public ResponseEntity<JwtDto> readerSignIn(@RequestBody ReaderDto.SignIn parameter) {
         return ResponseEntity.ok(tokenProvider.generateReaderToken(readerService.login(parameter)));
     }
@@ -44,7 +44,7 @@ public class AuthController {
         return ResponseEntity.ok(parameter.getEmail());
     }
 
-    @GetMapping("/sign/in/publisher")
+    @PostMapping("/sign/in/publisher")
     public ResponseEntity<JwtDto> publisherSignIn(@RequestBody PublisherDto.SignIn parameter) {
         return ResponseEntity.ok(tokenProvider.generatePublisherToken(publisherService.login(parameter)));
     }
