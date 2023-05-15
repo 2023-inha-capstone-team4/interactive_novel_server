@@ -25,6 +25,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .cors().configurationSource(corsConfigurationSource())
+                .and()
                 .csrf().disable()
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.NEVER)
@@ -54,7 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "http://localhost:8080",
                 "http://interactive-novel-web.s3-website.kr.object.ncloudstorage.com",
                 "http://interactive-novel-creators-web.s3-website.kr.object.ncloudstorage.com/",
-                "http://interactive-novel-editor.s3-website.kr.object.ncloudstorage.com/"
+                "http://interactive-novel-editor.s3-website.kr.object.ncloudstorage.com"
         ));
         config.setAllowedMethods(Arrays.asList(
                 HttpMethod.GET.name(),
