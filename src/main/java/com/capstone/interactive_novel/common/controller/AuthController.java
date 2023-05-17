@@ -10,6 +10,7 @@ import com.capstone.interactive_novel.common.dto.JwtDto;
 import com.capstone.interactive_novel.common.dto.RefreshDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -52,7 +53,11 @@ public class AuthController {
     @GetMapping("/sign/in/oauth2/naver")
     public ResponseEntity<?> naverSignIn(@RequestParam("code") String code,
                                          @RequestParam("state") String state) {
-        return ResponseEntity.ok(authService.naverLogin(code, state));
+        JwtDto token = authService.naverLogin(code, state);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, token.getGrantType() + " " + token.getAccessToken())
+                .header("X-Refresh-Token", token.getGrantType() + " " + token.getRefreshToken())
+                .build();
     }
 
     @GetMapping("/sign/in/oauth2")

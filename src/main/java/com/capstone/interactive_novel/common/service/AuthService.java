@@ -14,11 +14,11 @@ import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -58,15 +58,22 @@ public class AuthService {
         HttpEntity<MultiValueMap<String, String>> getUserInfoRequest = new HttpEntity<>(userHeader);
         ResponseEntity<Map> userResponse = userTemplate.exchange("https://openapi.naver.com/v1/nid/me", HttpMethod.GET, getUserInfoRequest, Map.class);
 
-        if(ObjectUtils.isEmpty(userResponse)) {
+        if(ObjectUtils.isEmpty(userResponse.getBody()) || ObjectUtils.isEmpty(userResponse.getBody().get("response"))) {
             throw new INovelException(FAILED_TO_GET_NAVER_USER_INFO);
         }
 
-        Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(userResponse.getBody().get("id").toString());
+        String[] userResponseList = userResponse.getBody().get("response").toString().split(",");
+        Map<String, String> userResponseAttributes = new HashMap<>();
+        for (String s : userResponseList) {
+            String[] keyAndValue = s.split("=");
+            userResponseAttributes.put(keyAndValue[0], keyAndValue[1]);
+        }
+
+        Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(userResponseAttributes.get("id"));
         ReaderEntity reader;
         if(optionalReader.isEmpty()) {
             reader = ReaderEntity.builder()
-                    .email(userResponse.getBody().get("id").toString())
+                    .email(userResponseAttributes.get("id"))
                     .interlock("naver")
                     .role(FREE)
                     .authorServiceYn(true)
