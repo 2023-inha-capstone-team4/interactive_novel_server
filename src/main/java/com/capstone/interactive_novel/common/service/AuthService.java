@@ -45,11 +45,11 @@ public class AuthService {
     }
 
     public JwtDto naverLogin(String code, String state) {
-        ResponseEntity<String> authTokenResponse = getNaverOAuthAccessToken(code, state);
-        if(ObjectUtils.isEmpty(authTokenResponse.getBody()) || authTokenResponse.getBody().contains("error")) {
+        ResponseEntity<Map> authTokenResponse = getNaverOAuthAccessToken(code, state);
+        if(ObjectUtils.isEmpty(authTokenResponse.getBody())) {
             throw new INovelException(FAILED_TO_GET_NAVER_AUTH_TOKEN);
         }
-        String accessToken = authTokenResponse.getBody();
+        String accessToken = authTokenResponse.getBody().get("access_token").toString();
 
         HttpHeaders userHeader = new HttpHeaders();
         RestTemplate userTemplate = new RestTemplate();
@@ -79,9 +79,6 @@ public class AuthService {
         return tokenProvider.generateNaverUserToken(reader);
     }
 
-
-
-
     public JwtDto refresh(RefreshDto refreshDto, String token) {
         token = TokenComponents.removeTokenHeader(token, "Bearer");
         Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(tokenUtils.getEmail(token));
@@ -102,19 +99,11 @@ public class AuthService {
         return tokenProvider.generateReaderToken(authentication.getName());
     }
 
-    private ResponseEntity<String> getNaverOAuthAccessToken(String code, String state) {
-        HttpHeaders authTokenHeader = new HttpHeaders();
+    private ResponseEntity<Map> getNaverOAuthAccessToken(String code, String state) {
         RestTemplate authTokenTemplate = new RestTemplate();
-        MultiValueMap<String, String> authTokenParam = new LinkedMultiValueMap<>();
 
-        authTokenHeader.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        authTokenParam.add("code", code);
-        authTokenParam.add("state", state);
-        authTokenParam.add("client_id", NAVER_CLIENT_ID);
-        authTokenParam.add("client_secret", NAVER_CLIENT_SECRET);
-        authTokenParam.add("grant_type", "authorization_code");
-
-        HttpEntity<MultiValueMap<String, String>> authTokenRequest = new HttpEntity<>(authTokenParam, authTokenHeader);
-        return authTokenTemplate.postForEntity("https://nid.naver.com/oauth2.0/authorize", authTokenRequest, String.class);
+        return authTokenTemplate.getForEntity("https://nid.naver.com/oauth2.0/token?code=" + code +
+                                                  "&state=" + state + "&client_id=" + NAVER_CLIENT_ID +
+                                                  "&client_secret=" + NAVER_CLIENT_SECRET + "&grant_type=authorization_code", Map.class);
     }
 }
