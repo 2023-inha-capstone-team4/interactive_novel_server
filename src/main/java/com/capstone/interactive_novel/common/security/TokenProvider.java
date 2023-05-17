@@ -66,6 +66,10 @@ public class TokenProvider {
         return setJwtDto(email, username, role);
     }
 
+    public JwtDto generateNaverUserToken(ReaderEntity reader) {
+        return setJwtDto(reader.getEmail(), reader.getUsername(), reader.getRole().getKey());
+    }
+
     private JwtDto setJwtDto(String email, String username, String role) {
         Claims claims = Jwts.claims().setSubject(email);
         claims.put(KEY_USERNAME, username);

@@ -49,6 +49,12 @@ public class AuthController {
         return ResponseEntity.ok(tokenProvider.generatePublisherToken(publisherService.login(parameter)));
     }
 
+    @GetMapping("/sign/in/oauth2/naver")
+    public ResponseEntity<?> naverSignIn(@RequestParam("code") String code,
+                                         @RequestParam("state") String state) {
+        return ResponseEntity.ok(authService.naverLogin(code, state));
+    }
+
     @GetMapping("/sign/in/oauth2")
     public ResponseEntity<JwtDto> oAuthSignIn(@AuthenticationPrincipal OAuth2User oAuthUser) {
         return ResponseEntity.ok(authService.login(oAuthUser));

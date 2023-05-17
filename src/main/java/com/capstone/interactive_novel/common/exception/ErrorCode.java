@@ -20,6 +20,7 @@ public enum ErrorCode {
     // 수행 불가 에러
     CANNOT_BOOKMARK_OWN_NOVEL("자신의 소설은 북마크할 수 없습니다."),
     CANNOT_BOOKMARK_YOURSELF("자기 자신은 북마크할 수 없습니다."),
+    CANNOT_INIT_FIREBASE("Firebase를 초기화할 수 없습니다."),
 
     // 탐색 불가 에러
     AUTH_KEY_NOT_FOUND("일치하는 인증 키를 찾을 수 없습니다."),
@@ -31,6 +32,10 @@ public enum ErrorCode {
     READER_BOOKMARK_LIST_NOT_FOUND("북마크 한 독자를 찾을 수 없습니다"),
     TOKEN_NOT_FOUND("액세스 토큰을 찾을 수 없습니다."),
     USER_NOT_FOUND("해당하는 사용자를 찾을 수 없습니다."),
+
+    // 실패 에러
+    FAILED_TO_GET_NAVER_AUTH_TOKEN("네이버 인증 토큰을 불러오는 데 실패하였습니다."),
+    FAILED_TO_GET_NAVER_USER_INFO("네이버 유저 정보를 불러오는 데 실패하였습니다."),
 
     // 유효성 에러
     INVALID_ACCESS_TOKEN("액세스 토큰이 유효하지 않습니다."),

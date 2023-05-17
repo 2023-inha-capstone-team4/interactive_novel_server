@@ -1,5 +1,6 @@
 package com.capstone.interactive_novel.common.service;
 
+import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.common.security.TokenProvider;
 import com.capstone.interactive_novel.common.dto.JwtDto;
 import com.capstone.interactive_novel.common.dto.RefreshDto;
@@ -8,11 +9,22 @@ import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import com.capstone.interactive_novel.reader.repository.ReaderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
 import java.util.Optional;
+
+import static com.capstone.interactive_novel.common.exception.ErrorCode.FAILED_TO_GET_NAVER_AUTH_TOKEN;
+import static com.capstone.interactive_novel.common.exception.ErrorCode.FAILED_TO_GET_NAVER_USER_INFO;
+import static com.capstone.interactive_novel.common.type.Role.FREE;
 
 @Slf4j
 @Service
@@ -22,9 +34,53 @@ public class AuthService {
     private final TokenProvider tokenProvider;
     private final TokenComponents tokenUtils;
 
+    @Value("${spring.security.oauth2.client.registration.naver.client-id}")
+    private String NAVER_CLIENT_ID;
+
+    @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
+    private String NAVER_CLIENT_SECRET;
+
     public JwtDto login(OAuth2User oAuth2User) {
         return tokenProvider.generateOAuthUserToken(oAuth2User);
     }
+
+    public JwtDto naverLogin(String code, String state) {
+        ResponseEntity<String> authTokenResponse = getNaverOAuthAccessToken(code, state);
+        if(ObjectUtils.isEmpty(authTokenResponse.getBody()) || authTokenResponse.getBody().contains("error")) {
+            throw new INovelException(FAILED_TO_GET_NAVER_AUTH_TOKEN);
+        }
+        String accessToken = authTokenResponse.getBody();
+
+        HttpHeaders userHeader = new HttpHeaders();
+        RestTemplate userTemplate = new RestTemplate();
+
+        userHeader.add(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
+        HttpEntity<MultiValueMap<String, String>> getUserInfoRequest = new HttpEntity<>(userHeader);
+        ResponseEntity<Map> userResponse = userTemplate.exchange("https://openapi.naver.com/v1/nid/me", HttpMethod.GET, getUserInfoRequest, Map.class);
+
+        if(ObjectUtils.isEmpty(userResponse)) {
+            throw new INovelException(FAILED_TO_GET_NAVER_USER_INFO);
+        }
+
+        Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(userResponse.getBody().get("id").toString());
+        ReaderEntity reader;
+        if(optionalReader.isEmpty()) {
+            reader = ReaderEntity.builder()
+                    .email(userResponse.getBody().get("id").toString())
+                    .interlock("naver")
+                    .role(FREE)
+                    .authorServiceYn(true)
+                    .build();
+            readerRepository.save(reader);
+        }
+        else {
+            reader = optionalReader.get();
+        }
+        return tokenProvider.generateNaverUserToken(reader);
+    }
+
+
+
 
     public JwtDto refresh(RefreshDto refreshDto, String token) {
         token = TokenComponents.removeTokenHeader(token, "Bearer");
@@ -44,5 +100,21 @@ public class AuthService {
         Authentication authentication = tokenProvider.getAuthenticationAboutReader(refreshToken);
 
         return tokenProvider.generateReaderToken(authentication.getName());
+    }
+
+    private ResponseEntity<String> getNaverOAuthAccessToken(String code, String state) {
+        HttpHeaders authTokenHeader = new HttpHeaders();
+        RestTemplate authTokenTemplate = new RestTemplate();
+        MultiValueMap<String, String> authTokenParam = new LinkedMultiValueMap<>();
+
+        authTokenHeader.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        authTokenParam.add("code", code);
+        authTokenParam.add("state", state);
+        authTokenParam.add("client_id", NAVER_CLIENT_ID);
+        authTokenParam.add("client_secret", NAVER_CLIENT_SECRET);
+        authTokenParam.add("grant_type", "authorization_code");
+
+        HttpEntity<MultiValueMap<String, String>> authTokenRequest = new HttpEntity<>(authTokenParam, authTokenHeader);
+        return authTokenTemplate.postForEntity("https://nid.naver.com/oauth2.0/authorize", authTokenRequest, String.class);
     }
 }
