@@ -106,7 +106,7 @@ public class NovelService {
         }
 
         String imageUrl = s3Service.uploadFile(file, NOVEL_DOMAIN, novelName);
-        NovelEntity novel = NovelEntity.createNovelByPublisher(publisher, novelName, novelIntroduce, imageUrl, novelStatus);
+        NovelEntity novel = NovelEntity.createNovelByPublisher(publisher, novelName, publisher.getUsername(), novelIntroduce, imageUrl, novelStatus);
         novelRepository.save(novel);
 
         return NovelDto.of(novel.getId(), novel.getNovelName(), publisher.getUsername(), publisher.getId(), novel.getNovelIntroduce(), PUBLISHER, novel.getNovelImageUrl(), novel.getTotalScore());

@@ -14,9 +14,9 @@ public class NovelDetailDto {
     private long novelId;
     private String novelDetailName;
     private String novelDetailIntroduce;
+    private String authorName;
     @Enumerated(EnumType.STRING)
     private NovelPublisherType novelPublisherType;
-    private String publisherName;
     private String novelImageUrl;
     private long totalScore;
     private NovelDetailMediaDto mediaDto;

@@ -53,10 +53,11 @@ public class NovelEntity {
                 .build();
     }
 
-    public static NovelEntity createNovelByPublisher(PublisherEntity publisher, String novelName, String novelIntroduce, String imageUrl, NovelStatus novelStatus) {
+    public static NovelEntity createNovelByPublisher(PublisherEntity publisher, String novelName, String authorName, String novelIntroduce, String imageUrl, NovelStatus novelStatus) {
         return NovelEntity.builder()
                 .publisher(publisher)
                 .novelName(novelName)
+                .authorName(authorName)
                 .novelIntroduce(novelIntroduce)
                 .NovelImageUrl(imageUrl)
                 .novelStatus(novelStatus)
