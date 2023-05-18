@@ -31,6 +31,9 @@ public class NovelDetailEntity {
     private Long detailScore;
 
     @Enumerated(EnumType.STRING)
+    private NovelDetailStatus novelDetailStatus;
+
+    @Enumerated(EnumType.STRING)
     private NovelPublisherType novelPublisherType;
 
     @ElementCollection(fetch = FetchType.LAZY)
@@ -53,6 +56,7 @@ public class NovelDetailEntity {
                 .novelData(FileUtils.fileToLobConverter(novelScriptFile))
                 .imageList(mediaDto.getImagelist())
                 .soundList(mediaDto.getSoundList())
+                .novelDetailStatus(NovelDetailStatus.AVAILABLE)
                 .build();
     }
 }

@@ -21,6 +21,7 @@ import java.util.List;
 import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
 import static com.capstone.interactive_novel.common.type.FileType.IMAGE;
 import static com.capstone.interactive_novel.common.type.FileType.SOUND;
+import static com.capstone.interactive_novel.novel.domain.NovelDetailStatus.DEACTIVATED;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +59,57 @@ public class NovelDetailService {
                 .totalScore(0L)
                 .mediaDto(mediaDto)
                 .build();
+    }
+
+    public NovelDetailDto modifyNovelDetailByReader(ReaderEntity reader,
+                                                    Long novelId,
+                                                    Long novelDetailId,
+                                                    MultipartFile file,
+                                                    String novelDetailName,
+                                                    String novelDetailIntroduce,
+                                                    MultipartFile novelDataFile,
+                                                    NovelDetailMediaDto mediaDto) {
+        NovelEntity novel = novelRepository.findById(novelId)
+                .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
+        NovelDetailEntity novelDetail = novelDetailRepository.findById(novelDetailId)
+                .orElseThrow(() -> new INovelException(NOVEL_DETAIL_NOT_FOUND));
+        if(novel.getReader().getId() != reader.getId()) {
+            throw new INovelException(UNMATCHED_USER_INFO);
+        }
+        if(novelDetail.getNovel().getId() != novelId) {
+            throw new INovelException(UNMATCHED_NOVEL_INFO);
+        }
+
+        String imageUrl = s3Service.uploadFile(file, "novel", novel.getNovelName());
+        novelDetail = NovelDetailEntity.setNovelDetail(novelDetailName, novelDetailIntroduce, imageUrl, novel, novelDataFile, mediaDto);
+        novelDetailRepository.save(novelDetail);
+
+        return NovelDetailDto.builder()
+                .id(novelDetail.getId())
+                .novelId(novel.getId())
+                .novelDetailName(novelDetailName)
+                .novelDetailIntroduce(novelDetailIntroduce)
+                .novelPublisherType(novelDetail.getNovelPublisherType())
+                .publisherName(reader.getUsername())
+                .novelImageUrl(imageUrl)
+                .totalScore(0L)
+                .mediaDto(mediaDto)
+                .build();
+    }
+
+    public void deactivateNovelDetailByReader(ReaderEntity reader, Long novelId, Long novelDetailId) {
+        NovelEntity novel = novelRepository.findById(novelId)
+                .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
+        NovelDetailEntity novelDetail = novelDetailRepository.findById(novelDetailId)
+                .orElseThrow(() -> new INovelException(NOVEL_DETAIL_NOT_FOUND));
+        if(novel.getReader().getId() != reader.getId()) {
+            throw new INovelException(UNMATCHED_USER_INFO);
+        }
+        if(novelDetail.getNovel().getId() != novelId) {
+            throw new INovelException(UNMATCHED_NOVEL_INFO);
+        }
+        novelDetail.setNovelDetailStatus(DEACTIVATED);
+        novelDetailRepository.save(novelDetail);
     }
 
     public List<String> uploadFilesByReader(ReaderEntity reader,

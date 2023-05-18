@@ -2,14 +2,17 @@ package com.capstone.interactive_novel.novel.service;
 
 import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.common.service.S3Service;
+import com.capstone.interactive_novel.novel.domain.NovelDetailStatus;
 import com.capstone.interactive_novel.novel.domain.NovelEntity;
 import com.capstone.interactive_novel.novel.domain.NovelStatus;
 import com.capstone.interactive_novel.novel.dto.NovelDto;
+import com.capstone.interactive_novel.novel.repository.NovelDetailRepositoryQuerydsl;
 import com.capstone.interactive_novel.novel.repository.NovelRepository;
 import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +24,7 @@ import static com.capstone.interactive_novel.novel.domain.NovelStatus.PAY;
 @Service
 public class NovelService {
     private final NovelRepository novelRepository;
+    private final NovelDetailRepositoryQuerydsl novelDetailRepositoryQuerydsl;
     private final S3Service s3Service;
     private static final String NOVEL_DOMAIN = "novel";
 
@@ -80,16 +84,17 @@ public class NovelService {
                 .build();
     }
 
-    public String deactivateNovelByReader(ReaderEntity reader, Long novelId) {
+    @Transactional
+    public void deactivateNovelByReader(ReaderEntity reader, Long novelId) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
         if(novel.getReader().getId() != reader.getId()) {
             throw new INovelException(UNMATCHED_USER_INFO);
         }
+
+        novelDetailRepositoryQuerydsl.updateAllNovelDetailStatus(novelId, NovelDetailStatus.DEACTIVATED);
         novel.setNovelStatus(NovelStatus.DEACTIVATED);
         novelRepository.save(novel);
-
-        return novel.getId() + ": " + NovelStatus.DEACTIVATED;
     }
 
     // Publisher 관련

@@ -1,5 +1,6 @@
 package com.capstone.interactive_novel.novel.controller;
 
+import com.capstone.interactive_novel.novel.dto.NovelDetailDto;
 import com.capstone.interactive_novel.novel.dto.NovelDetailMediaDto;
 import com.capstone.interactive_novel.novel.dto.NovelDto;
 import com.capstone.interactive_novel.novel.service.NovelDetailService;
@@ -42,18 +43,39 @@ public class NovelController {
     @PatchMapping("/reader/{novelId}/deactivate")
     ResponseEntity<String> deactivateNovelByReader(@AuthenticationPrincipal ReaderEntity reader,
                                                    @PathVariable Long novelId) {
-        return ResponseEntity.ok(novelService.deactivateNovelByReader(reader, novelId));
+        novelService.deactivateNovelByReader(reader, novelId);
+        return ResponseEntity.ok("Deactivated");
     }
 
     @PostMapping("/reader/{novelId}")
-    public ResponseEntity<?> createNovelDetailByReader(@AuthenticationPrincipal ReaderEntity reader,
+    public ResponseEntity<NovelDetailDto> createNovelDetailByReader(@AuthenticationPrincipal ReaderEntity reader,
+                                                                    @PathVariable Long novelId,
+                                                                    @RequestPart MultipartFile file,
+                                                                    @RequestPart String novelDetailName,
+                                                                    @RequestPart String novelDetailIntroduce,
+                                                                    @RequestPart MultipartFile novelDataFile,
+                                                                    @RequestPart NovelDetailMediaDto mediaDto) {
+        return ResponseEntity.ok(novelDetailService.createNovelDetailByReader(reader, novelId, file, novelDetailName, novelDetailIntroduce, novelDataFile, mediaDto));
+    }
+
+    @PostMapping("/reader/{novelId}/{novelDetailId}/modify")
+    public ResponseEntity<NovelDetailDto> modifyNovelDetailByReader(@AuthenticationPrincipal ReaderEntity reader,
                                                        @PathVariable Long novelId,
+                                                       @PathVariable Long novelDetailId,
                                                        @RequestPart MultipartFile file,
                                                        @RequestPart String novelDetailName,
                                                        @RequestPart String novelDetailIntroduce,
                                                        @RequestPart MultipartFile novelDataFile,
                                                        @RequestPart NovelDetailMediaDto mediaDto) {
-        return ResponseEntity.ok(novelDetailService.createNovelDetailByReader(reader, novelId, file, novelDetailName, novelDetailIntroduce, novelDataFile, mediaDto));
+        return ResponseEntity.ok(novelDetailService.modifyNovelDetailByReader(reader, novelId, novelDetailId,file, novelDetailName, novelDetailIntroduce, novelDataFile, mediaDto));
+    }
+
+    @PatchMapping("/reader/{novelId}/{novelDetailId}/deactivate")
+    public ResponseEntity<String> deactivateNovelDetailByReader(@AuthenticationPrincipal ReaderEntity reader,
+                                                                @PathVariable Long novelId,
+                                                                @PathVariable Long novelDetailId) {
+        novelDetailService.deactivateNovelDetailByReader(reader, novelId, novelDetailId);
+        return ResponseEntity.ok("Deactivated");
     }
 
     @PostMapping("/reader/{novelId}/{novelDetailId}/uploadFile")
