@@ -17,6 +17,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
+import static com.capstone.interactive_novel.novel.domain.NovelPublisherType.PUBLISHER;
+import static com.capstone.interactive_novel.novel.domain.NovelPublisherType.READER;
 import static com.capstone.interactive_novel.novel.domain.NovelStatus.FREE;
 import static com.capstone.interactive_novel.novel.domain.NovelStatus.PAY;
 
@@ -42,18 +44,10 @@ public class NovelService {
         }
 
         String imageUrl = s3Service.uploadFile(file, NOVEL_DOMAIN, novelName);
-        NovelEntity novel = NovelEntity.createNovelByReader(reader, novelName, novelIntroduce, imageUrl);
+        NovelEntity novel = NovelEntity.createNovelByReader(reader, novelName, reader.getUsername(), novelIntroduce, imageUrl);
         novelRepository.save(novel);
 
-        return NovelDto.builder()
-                .id(novel.getId())
-                .novelName(novelName)
-                .novelIntroduce(novelIntroduce)
-                .publisherName(reader.getUsername())
-                .publisherType(novel.getNovelPublisherType())
-                .NovelImageUrl(imageUrl)
-                .totalScore(0L)
-                .build();
+        return NovelDto.of(novel.getId(), novel.getNovelName(), reader.getUsername(), reader.getId(), novel.getNovelIntroduce(), READER, novel.getNovelImageUrl(), novel.getTotalScore());
     }
 
     public NovelDto modifyNovelByReader(ReaderEntity reader,
@@ -73,15 +67,7 @@ public class NovelService {
         }
 
         novelRepository.save(novel);
-        return NovelDto.builder()
-                .id(novel.getId())
-                .novelName(novel.getNovelName())
-                .novelIntroduce(novel.getNovelIntroduce())
-                .publisherName(reader.getUsername())
-                .publisherType(novel.getNovelPublisherType())
-                .NovelImageUrl(novel.getNovelImageUrl())
-                .totalScore(novel.getTotalScore())
-                .build();
+        return NovelDto.of(novel.getId(), novel.getNovelName(), reader.getUsername(), reader.getId(), novel.getNovelIntroduce(), READER, novel.getNovelImageUrl(), novel.getTotalScore());
     }
 
     @Transactional
@@ -123,15 +109,6 @@ public class NovelService {
         NovelEntity novel = NovelEntity.createNovelByPublisher(publisher, novelName, novelIntroduce, imageUrl, novelStatus);
         novelRepository.save(novel);
 
-        return NovelDto.builder()
-                .id(novel.getId())
-                .novelName(novelName)
-                .novelIntroduce(novelIntroduce)
-                .publisherName(publisher.getUsername())
-                .publisherType(novel.getNovelPublisherType())
-                .NovelImageUrl(imageUrl)
-                .totalScore(0L)
-                .build();
+        return NovelDto.of(novel.getId(), novel.getNovelName(), publisher.getUsername(), publisher.getId(), novel.getNovelIntroduce(), PUBLISHER, novel.getNovelImageUrl(), novel.getTotalScore());
     }
-
 }

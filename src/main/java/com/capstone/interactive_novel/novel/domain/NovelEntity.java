@@ -26,6 +26,8 @@ public class NovelEntity {
     @Column(unique = true)
     private String novelName;
 
+    private String authorName;
+
     private Long totalScore;
 
     private String novelIntroduce;
@@ -38,10 +40,11 @@ public class NovelEntity {
     @Enumerated(EnumType.STRING)
     private NovelPublisherType novelPublisherType;
 
-    public static NovelEntity createNovelByReader(ReaderEntity reader, String novelName, String novelIntroduce, String imageUrl) {
+    public static NovelEntity createNovelByReader(ReaderEntity reader, String novelName, String authorName, String novelIntroduce, String imageUrl) {
         return NovelEntity.builder()
                 .reader(reader)
                 .novelName(novelName)
+                .authorName(authorName)
                 .novelIntroduce(novelIntroduce)
                 .NovelImageUrl(imageUrl)
                 .novelStatus(NovelStatus.FREE)
