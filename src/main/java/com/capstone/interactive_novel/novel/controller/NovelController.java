@@ -97,4 +97,10 @@ public class NovelController {
                                                            @RequestPart String payType) {
         return ResponseEntity.ok(novelService.createNovelByPublisher(publisher, file, novelName, novelIntroduce, payType));
     }
+
+    // 전체 관련
+    @GetMapping("/new")
+    public ResponseEntity<List<NovelDto>> viewListOfNewNovel() {
+        return ResponseEntity.ok(novelService.viewListOfNewNovel());
+    }
 }

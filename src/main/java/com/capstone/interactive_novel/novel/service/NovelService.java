@@ -8,6 +8,7 @@ import com.capstone.interactive_novel.novel.domain.NovelStatus;
 import com.capstone.interactive_novel.novel.dto.NovelDto;
 import com.capstone.interactive_novel.novel.repository.NovelDetailRepositoryQuerydsl;
 import com.capstone.interactive_novel.novel.repository.NovelRepository;
+import com.capstone.interactive_novel.novel.repository.NovelRepositoryQuerydsl;
 import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
 import static com.capstone.interactive_novel.novel.domain.NovelPublisherType.PUBLISHER;
@@ -26,6 +29,7 @@ import static com.capstone.interactive_novel.novel.domain.NovelStatus.PAY;
 @Service
 public class NovelService {
     private final NovelRepository novelRepository;
+    private final NovelRepositoryQuerydsl novelRepositoryQuerydsl;
     private final NovelDetailRepositoryQuerydsl novelDetailRepositoryQuerydsl;
     private final S3Service s3Service;
     private static final String NOVEL_DOMAIN = "novel";
@@ -44,7 +48,7 @@ public class NovelService {
         }
 
         String imageUrl = s3Service.uploadFile(file, NOVEL_DOMAIN, novelName);
-        NovelEntity novel = NovelEntity.createNovelByReader(reader, novelName, reader.getUsername(), novelIntroduce, imageUrl);
+        NovelEntity novel = NovelEntity.createNovelByReader(reader, novelName, reader.getUsername(), reader.getId(), novelIntroduce, imageUrl);
         novelRepository.save(novel);
 
         return NovelDto.of(novel.getId(), novel.getNovelName(), reader.getUsername(), reader.getId(), novel.getNovelIntroduce(), READER, novel.getNovelImageUrl(), novel.getTotalScore());
@@ -106,9 +110,14 @@ public class NovelService {
         }
 
         String imageUrl = s3Service.uploadFile(file, NOVEL_DOMAIN, novelName);
-        NovelEntity novel = NovelEntity.createNovelByPublisher(publisher, novelName, publisher.getUsername(), novelIntroduce, imageUrl, novelStatus);
+        NovelEntity novel = NovelEntity.createNovelByPublisher(publisher, novelName, publisher.getUsername(), publisher.getId(),novelIntroduce, imageUrl, novelStatus);
         novelRepository.save(novel);
 
         return NovelDto.of(novel.getId(), novel.getNovelName(), publisher.getUsername(), publisher.getId(), novel.getNovelIntroduce(), PUBLISHER, novel.getNovelImageUrl(), novel.getTotalScore());
+    }
+
+    // 전체 사용
+    public List<NovelDto> viewListOfNewNovel() {
+        return novelRepositoryQuerydsl.viewListOfNewNovel();
     }
 }

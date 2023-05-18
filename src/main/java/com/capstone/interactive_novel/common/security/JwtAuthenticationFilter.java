@@ -38,7 +38,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
            checkUrl(request, "/sign/in/publisher") ||
            checkUrl(request, "/sign/in/reader") ||
            checkUrl(request, "/sign/email-auth") ||
-           checkUrl(request, "/sign/in/oauth2/naver")) {
+           checkUrl(request, "/sign/in/oauth2/naver") ||
+           checkUrl(request, "/novel/new")) {
             filterChain.doFilter(request, response);
             return;
         }

@@ -28,11 +28,13 @@ public class NovelEntity {
 
     private String authorName;
 
+    private Long authorId;
+
     private Long totalScore;
 
     private String novelIntroduce;
 
-    private String NovelImageUrl;
+    private String novelImageUrl;
 
     @Enumerated(EnumType.STRING)
     private NovelStatus novelStatus;
@@ -40,26 +42,28 @@ public class NovelEntity {
     @Enumerated(EnumType.STRING)
     private NovelPublisherType novelPublisherType;
 
-    public static NovelEntity createNovelByReader(ReaderEntity reader, String novelName, String authorName, String novelIntroduce, String imageUrl) {
+    public static NovelEntity createNovelByReader(ReaderEntity reader, String novelName, String authorName, Long authorId, String novelIntroduce, String imageUrl) {
         return NovelEntity.builder()
                 .reader(reader)
                 .novelName(novelName)
                 .authorName(authorName)
+                .authorId(authorId)
                 .novelIntroduce(novelIntroduce)
-                .NovelImageUrl(imageUrl)
+                .novelImageUrl(imageUrl)
                 .novelStatus(NovelStatus.FREE)
                 .novelPublisherType(NovelPublisherType.READER)
                 .totalScore(0L)
                 .build();
     }
 
-    public static NovelEntity createNovelByPublisher(PublisherEntity publisher, String novelName, String authorName, String novelIntroduce, String imageUrl, NovelStatus novelStatus) {
+    public static NovelEntity createNovelByPublisher(PublisherEntity publisher, String novelName, String authorName, Long authorId, String novelIntroduce, String imageUrl, NovelStatus novelStatus) {
         return NovelEntity.builder()
                 .publisher(publisher)
                 .novelName(novelName)
                 .authorName(authorName)
+                .authorId(authorId)
                 .novelIntroduce(novelIntroduce)
-                .NovelImageUrl(imageUrl)
+                .novelImageUrl(imageUrl)
                 .novelStatus(novelStatus)
                 .novelPublisherType(NovelPublisherType.PUBLISHER)
                 .totalScore(0L)

@@ -1,11 +1,13 @@
 package com.capstone.interactive_novel.novel.dto;
 
 import com.capstone.interactive_novel.novel.domain.NovelPublisherType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class NovelDto {
     private long id;
     private String novelName;
