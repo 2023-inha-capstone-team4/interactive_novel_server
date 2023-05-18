@@ -9,6 +9,8 @@ build/
 application.yml
 application-oauth.yml
 application-email.yml
+application-fcm.yml
+interactive-novel-194b5-firebase-adminsdk-so23e-c181dfd85f.json
 
 ### STS ###
 .apt_generated
