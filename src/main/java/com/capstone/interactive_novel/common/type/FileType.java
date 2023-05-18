@@ -9,7 +9,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public enum FileType {
     IMAGE("image", List.of(".png", ".jpg", ".jpeg", ".webp")),
-    SOUND("sound", List.of(".mp3", ".ogg", ".aac"));
+    SOUND("sound", List.of(".mp3", ".wav"));
 
     private final String fileType;
     private final List<String> allowedFileType;
