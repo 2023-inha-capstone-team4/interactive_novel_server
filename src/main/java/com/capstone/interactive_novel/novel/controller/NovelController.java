@@ -103,4 +103,10 @@ public class NovelController {
     public ResponseEntity<List<NovelDto>> viewListOfNewNovel() {
         return ResponseEntity.ok(novelService.viewListOfNewNovel());
     }
+
+    @GetMapping("/popular")
+    public ResponseEntity<List<NovelDto>> viewListOfPopularNovel(@RequestParam("startIdx") long startIdx,
+                                                                 @RequestParam("endIdx") long endIdx) {
+        return ResponseEntity.ok(novelService.viewListOfPopularNovel(startIdx, endIdx));
+    }
 }

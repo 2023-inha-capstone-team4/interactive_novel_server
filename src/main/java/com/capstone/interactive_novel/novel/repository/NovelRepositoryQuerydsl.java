@@ -16,7 +16,6 @@ import static com.capstone.interactive_novel.novel.domain.QNovelEntity.novelEnti
 public class NovelRepositoryQuerydsl {
     private final JPAQueryFactory jpaQueryFactory;
 
-
     public List<NovelDto> viewListOfNewNovel() {
         return jpaQueryFactory.select(Projections.constructor(NovelDto.class,
                         novelEntity.id,
@@ -31,6 +30,24 @@ public class NovelRepositoryQuerydsl {
                 .where(novelEntity.novelStatus.ne(NovelStatus.DEACTIVATED))
                 .limit(10)
                 .orderBy(novelEntity.id.desc())
+                .fetch();
+    }
+
+    public List<NovelDto> viewListOfPopularNovel(long startIdx, long endIdx) {
+        return jpaQueryFactory.select(Projections.constructor(NovelDto.class,
+                        novelEntity.id,
+                        novelEntity.novelName,
+                        novelEntity.authorName,
+                        novelEntity.authorId,
+                        novelEntity.novelIntroduce,
+                        novelEntity.novelPublisherType,
+                        novelEntity.novelImageUrl,
+                        novelEntity.totalScore))
+                .from(novelEntity)
+                .where(novelEntity.novelStatus.ne(NovelStatus.DEACTIVATED))
+                .orderBy(novelEntity.totalScore.desc())
+                .offset(startIdx)
+                .limit(endIdx - startIdx + 1)
                 .fetch();
     }
 }

@@ -120,4 +120,8 @@ public class NovelService {
     public List<NovelDto> viewListOfNewNovel() {
         return novelRepositoryQuerydsl.viewListOfNewNovel();
     }
+
+    public List<NovelDto> viewListOfPopularNovel(long startIdx, long endIdx) {
+        return novelRepositoryQuerydsl.viewListOfPopularNovel(startIdx, endIdx);
+    }
 }
