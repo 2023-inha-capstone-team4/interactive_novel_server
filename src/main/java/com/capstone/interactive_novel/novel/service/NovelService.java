@@ -20,8 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
-import static com.capstone.interactive_novel.novel.domain.NovelPublisherType.PUBLISHER;
-import static com.capstone.interactive_novel.novel.domain.NovelPublisherType.READER;
+import static com.capstone.interactive_novel.common.type.PublisherType.PUBLISHER;
+import static com.capstone.interactive_novel.common.type.PublisherType.READER;
 import static com.capstone.interactive_novel.novel.domain.NovelStatus.FREE;
 import static com.capstone.interactive_novel.novel.domain.NovelStatus.PAY;
 

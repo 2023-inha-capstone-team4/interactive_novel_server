@@ -1,5 +1,6 @@
 package com.capstone.interactive_novel.novel.domain;
 
+import com.capstone.interactive_novel.common.type.PublisherType;
 import com.capstone.interactive_novel.common.utils.FileUtils;
 import com.capstone.interactive_novel.novel.dto.NovelDetailMediaDto;
 import lombok.*;
@@ -19,8 +20,10 @@ public class NovelDetailEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci")
     private String novelDetailName;
 
+    @Column(columnDefinition = "VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci")
     private String novelDetailIntroduce;
 
     @ManyToOne
@@ -34,7 +37,7 @@ public class NovelDetailEntity {
     private NovelDetailStatus novelDetailStatus;
 
     @Enumerated(EnumType.STRING)
-    private NovelPublisherType novelPublisherType;
+    private PublisherType publisherType;
 
     @ElementCollection(fetch = FetchType.LAZY)
     List<String> imageList;
@@ -50,7 +53,7 @@ public class NovelDetailEntity {
                 .novelDetailName(novelDetailName)
                 .novelDetailIntroduce(novelDetailIntroduce)
                 .novelDetailImageUrl(imageUrl)
-                .novelPublisherType(NovelPublisherType.READER)
+                .publisherType(PublisherType.READER)
                 .novel(novel)
                 .detailScore(0L)
                 .novelData(FileUtils.fileToLobConverter(novelScriptFile))

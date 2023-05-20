@@ -23,7 +23,7 @@ public class NovelRepositoryQuerydsl {
                         novelEntity.authorName,
                         novelEntity.authorId,
                         novelEntity.novelIntroduce,
-                        novelEntity.novelPublisherType,
+                        novelEntity.publisherType,
                         novelEntity.novelImageUrl,
                         novelEntity.totalScore))
                 .from(novelEntity)
@@ -40,7 +40,7 @@ public class NovelRepositoryQuerydsl {
                         novelEntity.authorName,
                         novelEntity.authorId,
                         novelEntity.novelIntroduce,
-                        novelEntity.novelPublisherType,
+                        novelEntity.publisherType,
                         novelEntity.novelImageUrl,
                         novelEntity.totalScore))
                 .from(novelEntity)

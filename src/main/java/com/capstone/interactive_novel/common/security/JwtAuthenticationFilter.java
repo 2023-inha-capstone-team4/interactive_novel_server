@@ -40,7 +40,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
            checkUrl(request, "/sign/email-auth") ||
            checkUrl(request, "/sign/in/oauth2/naver") ||
            checkUrl(request, "/novel/new") ||
-           checkUrl(request, "/novel/popular")) {
+           checkUrl(request, "/novel/popular") ||
+           checkUrl(request, "/novel/review/list")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -80,7 +81,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean checkUrl(HttpServletRequest request, String url) {
-        return request.getRequestURL().toString().contains(url);
+
+        return request.getServletPath().startsWith(url);
     }
 
     private void setErrorResponse(HttpServletResponse response, ErrorCode errorCode) {

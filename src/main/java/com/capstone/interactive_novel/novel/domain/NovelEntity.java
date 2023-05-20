@@ -1,5 +1,6 @@
 package com.capstone.interactive_novel.novel.domain;
 
+import com.capstone.interactive_novel.common.type.PublisherType;
 import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.*;
@@ -26,6 +27,7 @@ public class NovelEntity {
     @Column(unique = true)
     private String novelName;
 
+    @Column(columnDefinition = "VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci")
     private String authorName;
 
     private Long authorId;
@@ -40,7 +42,7 @@ public class NovelEntity {
     private NovelStatus novelStatus;
 
     @Enumerated(EnumType.STRING)
-    private NovelPublisherType novelPublisherType;
+    private PublisherType publisherType;
 
     public static NovelEntity createNovelByReader(ReaderEntity reader, String novelName, String authorName, Long authorId, String novelIntroduce, String imageUrl) {
         return NovelEntity.builder()
@@ -51,7 +53,7 @@ public class NovelEntity {
                 .novelIntroduce(novelIntroduce)
                 .novelImageUrl(imageUrl)
                 .novelStatus(NovelStatus.FREE)
-                .novelPublisherType(NovelPublisherType.READER)
+                .publisherType(PublisherType.READER)
                 .totalScore(0L)
                 .build();
     }
@@ -65,7 +67,7 @@ public class NovelEntity {
                 .novelIntroduce(novelIntroduce)
                 .novelImageUrl(imageUrl)
                 .novelStatus(novelStatus)
-                .novelPublisherType(NovelPublisherType.PUBLISHER)
+                .publisherType(PublisherType.PUBLISHER)
                 .totalScore(0L)
                 .build();
     }

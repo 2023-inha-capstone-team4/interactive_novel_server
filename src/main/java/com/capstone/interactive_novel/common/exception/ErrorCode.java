@@ -20,6 +20,7 @@ public enum ErrorCode {
     // 수행 불가 에러
     CANNOT_BOOKMARK_OWN_NOVEL("자신의 소설은 북마크할 수 없습니다."),
     CANNOT_BOOKMARK_YOURSELF("자기 자신은 북마크할 수 없습니다."),
+    CANNOT_REVIEW_OWN_NOVEL("자신의 소설에는 리뷰를 남길 수 없습니다."),
     CANNOT_INIT_FIREBASE("Firebase를 초기화할 수 없습니다."),
 
     // 탐색 불가 에러
@@ -40,6 +41,7 @@ public enum ErrorCode {
     // 유효성 에러
     INVALID_ACCESS_TOKEN("액세스 토큰이 유효하지 않습니다."),
     INVALID_FILE_TYPE("유효하지 않은 파일 타입입니다."),
+    INVALID_PARAMETER_VALUE("유효하지 않은 파라미터 값입니다."),
     INVALID_PAY_TYPE("유효하지 않은 요금제 방식입니다."),
     INVALID_USER_AUTHENTICATION("인증 정보가 유효하지 않습니다."),
 
@@ -55,7 +57,8 @@ public enum ErrorCode {
 
     // 잘못된 정보 에러
     WRONG_FILE_EXTENSION("파일 확장자가 잘못되었습니다."),
-    WRONG_METHOD_OR_URL("요청하신 메서드 혹은 주소가 잘못되었습니다.");
+    WRONG_METHOD_OR_URL("요청하신 메서드 혹은 주소가 잘못되었습니다."),
+    WRONG_NOVEL_SCORE_VALUE("소설 점수 값이 잘못되었습니다.");
 
     private final String description;
 }
