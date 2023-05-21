@@ -20,6 +20,8 @@ public enum ErrorCode {
     // 수행 불가 에러
     CANNOT_BOOKMARK_OWN_NOVEL("자신의 소설은 북마크할 수 없습니다."),
     CANNOT_BOOKMARK_YOURSELF("자기 자신은 북마크할 수 없습니다."),
+    CANNOT_RECOMMEND_CORRESPONDING_COMMENT("해당 댓글은 추천할 수 없습니다."),
+    CANNOT_RECOMMEND_OWN_COMMENT("자기 자신의 댓글은 추천할 수 없습니다."),
     CANNOT_REVIEW_OWN_NOVEL("자신의 소설에는 리뷰를 남길 수 없습니다."),
     CANNOT_REVIEW_EXCESS_ONE("리뷰는 하나만 등록할 수 있습니다."),
     CANNOT_INIT_FIREBASE("Firebase를 초기화할 수 없습니다."),

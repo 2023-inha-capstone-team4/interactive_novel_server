@@ -2,16 +2,20 @@ package com.capstone.interactive_novel.novel.service;
 
 import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.novel.domain.NovelCommentEntity;
+import com.capstone.interactive_novel.novel.domain.NovelCommentRecommendEntity;
 import com.capstone.interactive_novel.novel.domain.NovelDetailEntity;
 import com.capstone.interactive_novel.novel.dto.NovelCommentDto;
+import com.capstone.interactive_novel.novel.repository.NovelCommentRecommendRepository;
 import com.capstone.interactive_novel.novel.repository.NovelCommentRepository;
 import com.capstone.interactive_novel.novel.repository.NovelCommentRepositoryQuerydsl;
 import com.capstone.interactive_novel.novel.repository.NovelDetailRepository;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
 import static com.capstone.interactive_novel.novel.domain.NovelCommentStatus.DEACTIVATED;
@@ -22,6 +26,7 @@ public class NovelCommentService {
     private final NovelDetailRepository novelDetailRepository;
     private final NovelCommentRepository novelCommentRepository;
     private final NovelCommentRepositoryQuerydsl novelCommentRepositoryQuerydsl;
+    private final NovelCommentRecommendRepository novelCommentRecommendRepository;
     public NovelCommentDto createNovelComment(ReaderEntity reader, Long novelDetailId, String comment) {
         NovelDetailEntity novelDetail = novelDetailRepository.findById(novelDetailId)
                 .orElseThrow(() -> new INovelException(NOVEL_DETAIL_NOT_FOUND));
@@ -78,5 +83,33 @@ public class NovelCommentService {
             }
         }
         throw new INovelException(INVALID_PARAMETER_VALUE);
+    }
+
+    @Transactional
+    public String recommendComment(ReaderEntity reader, Long commentId) {
+        NovelCommentEntity novelComment = novelCommentRepository.findById(commentId)
+                .orElseThrow(() -> new INovelException(NOVEL_COMMENT_NOT_FOUND));
+        if (novelComment.getReader().getId() == reader.getId()) {
+            throw new INovelException(CANNOT_RECOMMEND_OWN_COMMENT);
+        }
+        if(novelComment.getNovelCommentStatus().equals(DEACTIVATED)) {
+            throw new INovelException(CANNOT_RECOMMEND_CORRESPONDING_COMMENT);
+        }
+        Optional<NovelCommentRecommendEntity> optionalRecommend = novelCommentRecommendRepository.findByReaderAndNovelComment(reader, novelComment);
+
+                optionalRecommend.ifPresentOrElse(r -> {
+                    novelCommentRecommendRepository.delete(r);
+                    novelComment.setRecommendAmount(novelComment.getRecommendAmount() - 1);
+                    novelCommentRepository.save(novelComment);
+                    },
+                        () -> {
+                    novelCommentRecommendRepository.save(NovelCommentRecommendEntity.builder()
+                            .reader(reader)
+                            .novelComment(novelComment)
+                            .build());
+                    novelComment.setRecommendAmount(novelComment.getRecommendAmount() + 1);
+                    novelCommentRepository.save(novelComment);
+                });
+        return optionalRecommend.isPresent() ? "Deleted" : "Recommended";
     }
 }
