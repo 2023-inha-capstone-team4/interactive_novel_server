@@ -124,4 +124,11 @@ public class NovelService {
     public List<NovelDto> viewListOfPopularNovel(long startIdx, long endIdx) {
         return novelRepositoryQuerydsl.viewListOfPopularNovel(startIdx, endIdx);
     }
+
+    public Double viewNovelAverageScore(Long novelId) {
+        NovelEntity novel = novelRepository.findById(novelId)
+                .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
+        return novel.getReviewerAmount() == 0 ?
+                0.0 : ((double) novel.getTotalScore()) / ((double) novel.getReviewerAmount());
+    }
 }

@@ -39,8 +39,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
            checkUrl(request, "/sign/in/reader") ||
            checkUrl(request, "/sign/email-auth") ||
            checkUrl(request, "/sign/in/oauth2/naver") ||
-           checkUrl(request, "/novel/new") ||
-           checkUrl(request, "/novel/popular") ||
+           checkUrl(request, "/novel/list") ||
+           checkUrl(request, "/novel/score") ||
            checkUrl(request, "/novel/review/list")) {
             filterChain.doFilter(request, response);
             return;

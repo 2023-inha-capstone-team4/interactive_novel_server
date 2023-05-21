@@ -45,6 +45,7 @@ public class NovelReviewService {
         }
 
         novel.setTotalScore(novel.getTotalScore() + novelScore);
+        novel.setReviewerAmount(novel.getReviewerAmount() + 1);
         novelRepository.save(novel);
 
         NovelReviewEntity novelReview = NovelReviewEntity.builder()
@@ -78,6 +79,7 @@ public class NovelReviewService {
         novelReviewRepository.save(novelReview);
 
         novel.setTotalScore(novel.getTotalScore() - novelReview.getNovelScore());
+        novel.setReviewerAmount(novel.getReviewerAmount() - 1);
         novelRepository.save(novel);
     }
 

@@ -33,6 +33,7 @@ public class NovelEntity {
     private Long authorId;
 
     private Long totalScore;
+    private Long reviewerAmount;
 
     private String novelIntroduce;
 
