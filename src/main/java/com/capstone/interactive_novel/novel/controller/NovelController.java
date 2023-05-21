@@ -88,10 +88,10 @@ public class NovelController {
     }
 
     @PostMapping("/review/reader/{novelId}")
-    public ResponseEntity<NovelReviewDto> createNovelReviewByReader(@AuthenticationPrincipal ReaderEntity reader,
-                                                                    @PathVariable Long novelId,
-                                                                    @RequestBody NovelReviewInputDto novelReviewInputDto) {
-        return ResponseEntity.ok(novelReviewService.createReviewByReader(reader, novelId, novelReviewInputDto.getReview(), novelReviewInputDto.getNovelScore()));
+    public ResponseEntity<NovelReviewDto> createNovelReview(@AuthenticationPrincipal ReaderEntity reader,
+                                                            @PathVariable Long novelId,
+                                                            @RequestBody NovelReviewInputDto novelReviewInputDto) {
+        return ResponseEntity.ok(novelReviewService.createReview(reader, novelId, novelReviewInputDto.getReview(), novelReviewInputDto.getNovelScore()));
     }
 
     @GetMapping("/review/list/{novelId}")
