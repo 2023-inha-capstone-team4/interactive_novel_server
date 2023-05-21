@@ -18,6 +18,7 @@ public enum ErrorCode {
     ALREADY_USING_NOVEL_NAME("이미 사용 중인 소설명입니다."),
 
     // 수행 불가 에러
+    CANNOT_BOOKMARK_CORRESPONDING_USER("해당 유저는 북마크할 수 없습니다."),
     CANNOT_BOOKMARK_OWN_NOVEL("자신의 소설은 북마크할 수 없습니다."),
     CANNOT_BOOKMARK_YOURSELF("자기 자신은 북마크할 수 없습니다."),
     CANNOT_RECOMMEND_CORRESPONDING_COMMENT("해당 댓글은 추천할 수 없습니다."),
