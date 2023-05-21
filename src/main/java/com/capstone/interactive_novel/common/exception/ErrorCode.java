@@ -21,6 +21,7 @@ public enum ErrorCode {
     CANNOT_BOOKMARK_OWN_NOVEL("자신의 소설은 북마크할 수 없습니다."),
     CANNOT_BOOKMARK_YOURSELF("자기 자신은 북마크할 수 없습니다."),
     CANNOT_REVIEW_OWN_NOVEL("자신의 소설에는 리뷰를 남길 수 없습니다."),
+    CANNOT_REVIEW_EXCESS_ONE("리뷰는 하나만 등록할 수 있습니다."),
     CANNOT_INIT_FIREBASE("Firebase를 초기화할 수 없습니다."),
 
     // 탐색 불가 에러
@@ -29,6 +30,7 @@ public enum ErrorCode {
     NOVEL_NOT_FOUND("해당하는 소설을 찾을 수 없습니다."),
     NOVEL_BOOKMARK_LIST_NOT_FOUND("북마크 한 소설을 찾을 수 없습니다."),
     NOVEL_DETAIL_NOT_FOUND("해당하는 소설 회차를 찾을 수 없습니다."),
+    NOVEL_REVIEW_NOT_FOUND("해당하는 소설 리뷰를 찾을 수 없습니다."),
     PUBLISHER_BOOKMARK_LIST_NOT_FOUND("북마크 한 작가를 찾을 수 없습니다."),
     READER_BOOKMARK_LIST_NOT_FOUND("북마크 한 독자를 찾을 수 없습니다"),
     TOKEN_NOT_FOUND("액세스 토큰을 찾을 수 없습니다."),
@@ -47,6 +49,7 @@ public enum ErrorCode {
 
     // 불일치 에러
     UNMATCHED_NOVEL_INFO("소설 정보가 일치하지 않습니다."),
+    UNMATCHED_NOVEL_REVIEW_INFO("소설 리뷰 정보가 일치하지 않습니다."),
     UNMATCHED_PASSWORD("비밀번호가 일치하지 않습니다."),
     UNMATCHED_USER_INFO("사용자 정보가 일치하지 않습니다."),
     // 불필요한 요청

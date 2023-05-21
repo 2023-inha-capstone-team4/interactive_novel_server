@@ -87,11 +87,19 @@ public class NovelController {
         return ResponseEntity.ok(novelDetailService.uploadFilesByReader(reader, novelId, novelDetailId, files, fileType));
     }
 
-    @PostMapping("/review/reader/{novelId}")
+    @PostMapping("/review/{novelId}")
     public ResponseEntity<NovelReviewDto> createNovelReview(@AuthenticationPrincipal ReaderEntity reader,
                                                             @PathVariable Long novelId,
                                                             @RequestBody NovelReviewInputDto novelReviewInputDto) {
         return ResponseEntity.ok(novelReviewService.createNovelReview(reader, novelId, novelReviewInputDto.getReview(), novelReviewInputDto.getNovelScore()));
+    }
+
+    @PatchMapping("/review/{novelId}/{novelReviewId}/deactivate")
+    public ResponseEntity<String> deactivateNovelReview(@AuthenticationPrincipal ReaderEntity reader,
+                                                   @PathVariable Long novelId,
+                                                   @PathVariable Long novelReviewId) {
+        novelReviewService.deactivateNovelReview(reader, novelId, novelReviewId);
+        return ResponseEntity.ok("Deactivated");
     }
 
     @GetMapping("/review/list/{novelId}")
