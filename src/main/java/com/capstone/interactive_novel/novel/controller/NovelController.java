@@ -2,7 +2,6 @@ package com.capstone.interactive_novel.novel.controller;
 
 import com.capstone.interactive_novel.novel.dto.*;
 import com.capstone.interactive_novel.novel.service.NovelDetailService;
-import com.capstone.interactive_novel.novel.service.NovelReviewService;
 import com.capstone.interactive_novel.novel.service.NovelService;
 import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
@@ -20,8 +19,6 @@ import java.util.List;
 public class NovelController {
     private final NovelService novelService;
     private final NovelDetailService novelDetailService;
-    private final NovelReviewService novelReviewService;
-
     // Reader 관련
 
     @PostMapping("/reader")
@@ -85,30 +82,6 @@ public class NovelController {
                                                                         @RequestPart MultipartFile[] files,
                                                                         @RequestPart String fileType) {
         return ResponseEntity.ok(novelDetailService.uploadFilesByReader(reader, novelId, novelDetailId, files, fileType));
-    }
-
-    @PostMapping("/review/{novelId}")
-    public ResponseEntity<NovelReviewDto> createNovelReview(@AuthenticationPrincipal ReaderEntity reader,
-                                                            @PathVariable Long novelId,
-                                                            @RequestBody NovelReviewInputDto novelReviewInputDto) {
-        return ResponseEntity.ok(novelReviewService.createNovelReview(reader, novelId, novelReviewInputDto.getReview(), novelReviewInputDto.getNovelScore()));
-    }
-
-    @PatchMapping("/review/{novelId}/{novelReviewId}/deactivate")
-    public ResponseEntity<String> deactivateNovelReview(@AuthenticationPrincipal ReaderEntity reader,
-                                                   @PathVariable Long novelId,
-                                                   @PathVariable Long novelReviewId) {
-        novelReviewService.deactivateNovelReview(reader, novelId, novelReviewId);
-        return ResponseEntity.ok("Deactivated");
-    }
-
-    @GetMapping("/review/list/{novelId}")
-    public ResponseEntity<List<NovelReviewDto>> viewListOfNewNovelReview(@PathVariable Long novelId,
-                                                                         @RequestParam String method,
-                                                                         @RequestParam String order,
-                                                                         @RequestParam Long startIdx,
-                                                                         @RequestParam Long endIdx) {
-        return ResponseEntity.ok(novelReviewService.viewListOfNewNovelReview(startIdx, endIdx, novelId, method, order));
     }
 
     // Publisher 관련
