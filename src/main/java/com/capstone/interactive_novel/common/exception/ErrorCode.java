@@ -29,6 +29,7 @@ public enum ErrorCode {
     EMAIL_NOT_FOUND("해당하는 이메일을 찾을 수 없습니다."),
     NOVEL_NOT_FOUND("해당하는 소설을 찾을 수 없습니다."),
     NOVEL_BOOKMARK_LIST_NOT_FOUND("북마크 한 소설을 찾을 수 없습니다."),
+    NOVEL_COMMENT_NOT_FOUND("해당하는 소설 댓글을 찾을 수 없습니다."),
     NOVEL_DETAIL_NOT_FOUND("해당하는 소설 회차를 찾을 수 없습니다."),
     NOVEL_REVIEW_NOT_FOUND("해당하는 소설 리뷰를 찾을 수 없습니다."),
     PUBLISHER_BOOKMARK_LIST_NOT_FOUND("북마크 한 작가를 찾을 수 없습니다."),
@@ -48,6 +49,7 @@ public enum ErrorCode {
     INVALID_USER_AUTHENTICATION("인증 정보가 유효하지 않습니다."),
 
     // 불일치 에러
+    UNMATCHED_COMMENT_INFO("댓글 정보가 일치하지 않습니다."),
     UNMATCHED_NOVEL_INFO("소설 정보가 일치하지 않습니다."),
     UNMATCHED_NOVEL_REVIEW_INFO("소설 리뷰 정보가 일치하지 않습니다."),
     UNMATCHED_PASSWORD("비밀번호가 일치하지 않습니다."),
