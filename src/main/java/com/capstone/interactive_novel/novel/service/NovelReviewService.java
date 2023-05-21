@@ -28,10 +28,10 @@ public class NovelReviewService {
     private final NovelReviewRepositoryQuerydsl novelReviewRepositoryQuerydsl;
 
     @Transactional
-    public NovelReviewDto createReview(ReaderEntity reader,
-                                       Long novelId,
-                                       String review,
-                                       int novelScore) {
+    public NovelReviewDto createNovelReview(ReaderEntity reader,
+                                            Long novelId,
+                                            String review,
+                                            int novelScore) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new INovelException(ErrorCode.NOVEL_NOT_FOUND));
         if(novel.getReader().getId() == reader.getId()) {

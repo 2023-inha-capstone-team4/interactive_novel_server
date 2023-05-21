@@ -91,7 +91,7 @@ public class NovelController {
     public ResponseEntity<NovelReviewDto> createNovelReview(@AuthenticationPrincipal ReaderEntity reader,
                                                             @PathVariable Long novelId,
                                                             @RequestBody NovelReviewInputDto novelReviewInputDto) {
-        return ResponseEntity.ok(novelReviewService.createReview(reader, novelId, novelReviewInputDto.getReview(), novelReviewInputDto.getNovelScore()));
+        return ResponseEntity.ok(novelReviewService.createNovelReview(reader, novelId, novelReviewInputDto.getReview(), novelReviewInputDto.getNovelScore()));
     }
 
     @GetMapping("/review/list/{novelId}")
