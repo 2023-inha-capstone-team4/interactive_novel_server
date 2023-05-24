@@ -74,7 +74,7 @@ public class ReaderService implements UserDetailsService {
         return reader.getEmail();
     }
 
-    public boolean emailAuth(String uuid) {
+    public void emailAuth(String uuid) {
         Optional<ReaderEntity> optionalReader = readerRepository.findByEmailAuthKey(uuid);
         if(optionalReader.isEmpty()) {
             throw new INovelException(AUTH_KEY_NOT_FOUND);
@@ -86,7 +86,6 @@ public class ReaderService implements UserDetailsService {
         reader.setEmailAuthYn(true);
         reader.setRole(Role.FREE);
         readerRepository.save(reader);
-        return true;
     }
 
     public String applyAuthorService(ReaderEntity reader) {

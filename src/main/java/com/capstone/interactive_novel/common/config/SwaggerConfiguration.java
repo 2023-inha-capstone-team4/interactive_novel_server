@@ -18,7 +18,7 @@ public class SwaggerConfiguration {
     public Docket api() {
         return new Docket(DocumentationType.OAS_30)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.capstone.interactive_novel"))
                 .paths(PathSelectors.any())
                 .build().apiInfo(apiInfo());
     }

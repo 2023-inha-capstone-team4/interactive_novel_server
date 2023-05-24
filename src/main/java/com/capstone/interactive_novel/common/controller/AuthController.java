@@ -8,6 +8,8 @@ import com.capstone.interactive_novel.common.service.AuthService;
 import com.capstone.interactive_novel.reader.service.ReaderService;
 import com.capstone.interactive_novel.common.dto.JwtDto;
 import com.capstone.interactive_novel.common.dto.RefreshDto;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +21,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static com.capstone.interactive_novel.common.document.SwaggerDocument.documentAboutAuthController.*;
+
 @Slf4j
+@Api(tags = "유저 인증 API")
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
@@ -28,28 +33,42 @@ public class AuthController {
     private final AuthService authService;
     private final TokenProvider tokenProvider;
 
+    @ApiOperation(value = readerSignUpValue, notes = readerSignUpNotes)
     @PostMapping("/sign/up/reader")
     public ResponseEntity<?> readerSignUp(@RequestBody ReaderDto.SignUp parameter) {
         readerService.register(parameter);
         return ResponseEntity.ok(parameter.getEmail());
     }
 
+    @ApiOperation(value = readerSignInValue, notes = readerSignInNotes)
     @PostMapping("/sign/in/reader")
     public ResponseEntity<JwtDto> readerSignIn(@RequestBody ReaderDto.SignIn parameter) {
-        return ResponseEntity.ok(tokenProvider.generateReaderToken(readerService.login(parameter)));
+        JwtDto token = tokenProvider.generateReaderToken(readerService.login(parameter));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, token.getGrantType() + " " + token.getAccessToken())
+                .header("X-Refresh-Token", token.getGrantType() + " " + token.getRefreshToken())
+                .build();
+
     }
 
+    @ApiOperation(value = publisherSignUpValue, notes = publisherSignUpNotes)
     @PostMapping("/sign/up/publisher")
     public ResponseEntity<?> publisherSignUp(@RequestBody PublisherDto.SignUp parameter) {
         publisherService.register(parameter);
         return ResponseEntity.ok(parameter.getEmail());
     }
 
+    @ApiOperation(value = publisherSignInValue, notes = publisherSignInNotes)
     @PostMapping("/sign/in/publisher")
     public ResponseEntity<JwtDto> publisherSignIn(@RequestBody PublisherDto.SignIn parameter) {
-        return ResponseEntity.ok(tokenProvider.generatePublisherToken(publisherService.login(parameter)));
+        JwtDto token = tokenProvider.generatePublisherToken(publisherService.login(parameter));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, token.getGrantType() + " " + token.getAccessToken())
+                .header("X-Refresh-Token", token.getGrantType() + " " + token.getRefreshToken())
+                .build();
     }
 
+    @ApiOperation(value = naverSignInValue, notes = naverSignInNotes)
     @GetMapping("/sign/in/oauth2/naver")
     public ResponseEntity<?> naverSignIn(@RequestParam("code") String code,
                                          @RequestParam("state") String state) {
@@ -65,13 +84,12 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(oAuthUser));
     }
 
+    @ApiOperation(value = emailAuthValue, notes = emailAuthNotes)
     @GetMapping("/sign/email-auth")
     public ResponseEntity<?> emailAuth(HttpServletRequest request) {
         String uuid = request.getParameter("id");
-        boolean result = readerService.emailAuth(uuid);
-        return result ?
-                ResponseEntity.ok("이메일 인증에 성공하였습니다.") :
-                ResponseEntity.ok("이메일 인증에 실패하였습니다.");
+        readerService.emailAuth(uuid);
+        return ResponseEntity.ok(null);
     }
 
     @PostMapping("/refresh")
