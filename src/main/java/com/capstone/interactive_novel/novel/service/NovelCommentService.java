@@ -1,6 +1,8 @@
 package com.capstone.interactive_novel.novel.service;
 
 import com.capstone.interactive_novel.common.exception.INovelException;
+import com.capstone.interactive_novel.kafka.components.ProducerComponents;
+import com.capstone.interactive_novel.kafka.message.CommentRecommendMessage;
 import com.capstone.interactive_novel.novel.domain.NovelCommentEntity;
 import com.capstone.interactive_novel.novel.domain.NovelCommentRecommendEntity;
 import com.capstone.interactive_novel.novel.domain.NovelDetailEntity;
@@ -10,6 +12,7 @@ import com.capstone.interactive_novel.novel.repository.NovelCommentRepository;
 import com.capstone.interactive_novel.novel.repository.NovelCommentRepositoryQuerydsl;
 import com.capstone.interactive_novel.novel.repository.NovelDetailRepository;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
+import com.capstone.interactive_novel.reader.repository.ReaderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,15 +21,19 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
+import static com.capstone.interactive_novel.kafka.type.KafkaTopicType.COMMENT_RECOMMEND;
 import static com.capstone.interactive_novel.novel.domain.NovelCommentStatus.DEACTIVATED;
 
 @Service
 @RequiredArgsConstructor
 public class NovelCommentService {
+    private final ReaderRepository readerRepository;
     private final NovelDetailRepository novelDetailRepository;
     private final NovelCommentRepository novelCommentRepository;
     private final NovelCommentRepositoryQuerydsl novelCommentRepositoryQuerydsl;
     private final NovelCommentRecommendRepository novelCommentRecommendRepository;
+    private final ProducerComponents producerComponents;
+
     public NovelCommentDto createNovelComment(ReaderEntity reader, Long novelDetailId, String comment) {
         NovelDetailEntity novelDetail = novelDetailRepository.findById(novelDetailId)
                 .orElseThrow(() -> new INovelException(NOVEL_DETAIL_NOT_FOUND));
@@ -85,8 +92,16 @@ public class NovelCommentService {
         throw new INovelException(INVALID_PARAMETER_VALUE);
     }
 
+    public void sendRecommendCommentInfo(ReaderEntity reader, Long commentId) {
+        CommentRecommendMessage message = new CommentRecommendMessage(reader.getId(), commentId);
+        producerComponents.sendCommentRecommendMessage(COMMENT_RECOMMEND, message);
+    }
+
     @Transactional
-    public String recommendComment(ReaderEntity reader, Long commentId) {
+    public void processRecommendCommentMessage(Long readerId, Long commentId) {
+        ReaderEntity reader = readerRepository.findById(readerId)
+                .orElseThrow(() -> new INovelException(USER_NOT_FOUND));
+
         NovelCommentEntity novelComment = novelCommentRepository.findById(commentId)
                 .orElseThrow(() -> new INovelException(NOVEL_COMMENT_NOT_FOUND));
         if (novelComment.getReader().getId() == reader.getId()) {
@@ -97,12 +112,12 @@ public class NovelCommentService {
         }
         Optional<NovelCommentRecommendEntity> optionalRecommend = novelCommentRecommendRepository.findByReaderAndNovelComment(reader, novelComment);
 
-                optionalRecommend.ifPresentOrElse(r -> {
+        optionalRecommend.ifPresentOrElse(r -> {
                     novelCommentRecommendRepository.delete(r);
                     novelComment.setRecommendAmount(novelComment.getRecommendAmount() - 1);
                     novelCommentRepository.save(novelComment);
-                    },
-                        () -> {
+                },
+                () -> {
                     novelCommentRecommendRepository.save(NovelCommentRecommendEntity.builder()
                             .reader(reader)
                             .novelComment(novelComment)
@@ -110,6 +125,7 @@ public class NovelCommentService {
                     novelComment.setRecommendAmount(novelComment.getRecommendAmount() + 1);
                     novelCommentRepository.save(novelComment);
                 });
-        return optionalRecommend.isPresent() ? "Deleted" : "Recommended";
     }
+
+
 }

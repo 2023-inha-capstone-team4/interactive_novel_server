@@ -8,8 +8,10 @@ import lombok.Getter;
 public enum ErrorCode {
     // 기본 에러
     AMAZON_S3_ERROR("AMAZON S3 관련 오류가 발생했습니다."),
+    DESERIALIZER_ERROR("역직렬화 관련 오류가 발생했습니다."),
     INTERNAL_ERROR("내부 서버 오류가 발생했습니다."),
     JWT_ERROR("JWT 토큰 관련 오류가 발생했습니다."),
+    SERIALIZER_ERROR("직렬화 관련 오류가 발생했습니다."),
 
     // 중복 에러
     ALREADY_VERIFIED_EMAIL("이미 인증된 이메일입니다."),
@@ -43,6 +45,7 @@ public enum ErrorCode {
     // 실패 에러
     FAILED_TO_GET_NAVER_AUTH_TOKEN("네이버 인증 토큰을 불러오는 데 실패하였습니다."),
     FAILED_TO_GET_NAVER_USER_INFO("네이버 유저 정보를 불러오는 데 실패하였습니다."),
+    FAILED_TO_WRITE_KAFKA_MESSAGE_LOG("Kafka 오류 메시지 로그 작성에 실패하였습니다."),
 
     // 유효성 에러
     INVALID_ACCESS_TOKEN("액세스 토큰이 유효하지 않습니다."),

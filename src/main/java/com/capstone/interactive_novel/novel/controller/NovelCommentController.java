@@ -48,8 +48,9 @@ public class NovelCommentController {
     }
 
     @PostMapping("/recommend/{novelCommentId}")
-    public ResponseEntity<String> recommendComment(@AuthenticationPrincipal ReaderEntity reader,
+    public ResponseEntity<?> recommendComment(@AuthenticationPrincipal ReaderEntity reader,
                                               @PathVariable Long novelCommentId) {
-        return ResponseEntity.ok(novelCommentService.recommendComment(reader, novelCommentId));
+        novelCommentService.sendRecommendCommentInfo(reader, novelCommentId);
+        return ResponseEntity.ok(null);
     }
 }
