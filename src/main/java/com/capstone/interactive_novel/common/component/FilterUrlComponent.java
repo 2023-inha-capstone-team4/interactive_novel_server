@@ -1,11 +1,11 @@
-package com.capstone.interactive_novel.common.components;
+package com.capstone.interactive_novel.common.component;
 
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Component
-public class FilterUrlComponents {
+public class FilterUrlComponent {
 
     public Set<String> filterUrlSet() {
         List<String> urlList = new ArrayList<>(Arrays.asList("/sign/up", "/sign/in", "/sign/email-auth", "/novel/list", "/novel/score", "/novel/review/list", "/novel/comment/list", "/swagger", "/v2/api-docs", "/v3/api-docs"));

@@ -1,6 +1,6 @@
 package com.capstone.interactive_novel.reader.service;
 
-import com.capstone.interactive_novel.common.components.MailComponents;
+import com.capstone.interactive_novel.common.component.MailComponent;
 import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.common.service.S3Service;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
@@ -30,7 +30,7 @@ public class ReaderService implements UserDetailsService {
     private String secretKey;
     private final ReaderRepository readerRepository;
     private final PasswordEncoder passwordEncoder;
-    private final MailComponents mailComponents;
+    private final MailComponent mailComponent;
     private final S3Service s3Service;
 
     @Override
@@ -57,7 +57,7 @@ public class ReaderService implements UserDetailsService {
                          "<br><p>Please click the link below to complete the authentication.</p>" +
                          "<div><a target='_blank' href='http://localhost:8080/sign/email-auth?id=" +
                          uuid +"'> Verify </a></div>";
-        mailComponents.sendMail(email, subject, message);
+        mailComponent.sendMail(email, subject, message);
     }
 
     public String login(ReaderDto.SignIn parameter) {

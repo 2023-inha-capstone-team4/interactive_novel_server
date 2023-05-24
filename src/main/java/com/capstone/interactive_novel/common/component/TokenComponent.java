@@ -1,4 +1,4 @@
-package com.capstone.interactive_novel.common.components;
+package com.capstone.interactive_novel.common.component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TokenComponents {
+public class TokenComponent {
     @Value("${spring.jwt.secret}")
     private String secretKey;
     public static String removeTokenHeader(String token, String header) {

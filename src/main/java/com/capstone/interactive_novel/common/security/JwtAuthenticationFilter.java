@@ -1,7 +1,7 @@
 package com.capstone.interactive_novel.common.security;
 
-import com.capstone.interactive_novel.common.components.FilterUrlComponents;
-import com.capstone.interactive_novel.common.components.TokenComponents;
+import com.capstone.interactive_novel.common.component.FilterUrlComponent;
+import com.capstone.interactive_novel.common.component.TokenComponent;
 import com.capstone.interactive_novel.common.dto.ErrorResponseDto;
 import com.capstone.interactive_novel.common.exception.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,8 +30,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String TOKEN_HEADER = "Authorization";
     private static final String TOKEN_PREFIX = "Bearer ";
     private final TokenProvider tokenProvider;
-    private final TokenComponents tokenComponents;
-    private final FilterUrlComponents filterUrlComponents;
+    private final TokenComponent tokenComponent;
+    private final FilterUrlComponent filterUrlComponent;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -45,13 +45,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = TokenComponents.removeTokenHeader(request.getHeader(TOKEN_HEADER), TOKEN_PREFIX);
+        String token = TokenComponent.removeTokenHeader(request.getHeader(TOKEN_HEADER), TOKEN_PREFIX);
         if(!tokenProvider.validateToken(token)) {
             setErrorResponse(response, INVALID_ACCESS_TOKEN);
             return;
         }
 
-        String role = tokenComponents.parseClaims(token).get("role").toString();
+        String role = tokenComponent.parseClaims(token).get("role").toString();
         Authentication auth;
         log.info(role);
         if(role.contains(FREE.getKey()) || role.contains(JUNIOR.getKey())) {
@@ -75,7 +75,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean checkUrl(HttpServletRequest request) {
-        Set<String> filterUrlSet = filterUrlComponents.filterUrlSet();
+        Set<String> filterUrlSet = filterUrlComponent.filterUrlSet();
 
         return filterUrlSet.stream()
                 .anyMatch(request.getServletPath()::startsWith);

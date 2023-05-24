@@ -1,4 +1,4 @@
-package com.capstone.interactive_novel.common.components;
+package com.capstone.interactive_novel.common.component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import javax.mail.internet.MimeMessage;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class MailComponents {
+public class MailComponent {
     private final JavaMailSender javaMailSender;
 
     public void sendMail(String mail, String subject, String message) {

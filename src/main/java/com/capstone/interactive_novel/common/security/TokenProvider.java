@@ -1,6 +1,6 @@
 package com.capstone.interactive_novel.common.security;
 
-import com.capstone.interactive_novel.common.components.TokenComponents;
+import com.capstone.interactive_novel.common.component.TokenComponent;
 import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
 import com.capstone.interactive_novel.publisher.repository.PublisherRepository;
@@ -41,7 +41,7 @@ public class TokenProvider {
     private final PublisherService publisherService;
     private final ReaderRepository readerRepository;
     private final PublisherRepository publisherRepository;
-    private final TokenComponents tokenComponents;
+    private final TokenComponent tokenComponent;
 
     public JwtDto generateReaderToken(String email) {
         ReaderEntity reader = readerRepository.findByEmail(email)
@@ -99,19 +99,19 @@ public class TokenProvider {
     }
 
     public Authentication getAuthenticationAboutReader(String token) {
-        UserDetails userDetails = readerService.loadUserByUsername(tokenComponents.getEmail(token));
+        UserDetails userDetails = readerService.loadUserByUsername(tokenComponent.getEmail(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     public Authentication getAuthenticationAboutPublisher(String token) {
-        UserDetails userDetails = publisherService.loadUserByUsername(tokenComponents.getEmail(token));
+        UserDetails userDetails = publisherService.loadUserByUsername(tokenComponent.getEmail(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     public boolean validateToken(String token) {
         if(!StringUtils.hasText(token)) return false;
 
-        var claims = tokenComponents.parseClaims(token);
+        var claims = tokenComponent.parseClaims(token);
         return !claims.getExpiration().before(new Date());
     }
 }

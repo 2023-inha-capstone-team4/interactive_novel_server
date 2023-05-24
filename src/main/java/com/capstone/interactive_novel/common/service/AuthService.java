@@ -4,7 +4,7 @@ import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.common.security.TokenProvider;
 import com.capstone.interactive_novel.common.dto.JwtDto;
 import com.capstone.interactive_novel.common.dto.RefreshDto;
-import com.capstone.interactive_novel.common.components.TokenComponents;
+import com.capstone.interactive_novel.common.component.TokenComponent;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import com.capstone.interactive_novel.reader.repository.ReaderRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ import static com.capstone.interactive_novel.common.type.Role.FREE;
 public class AuthService {
     private final ReaderRepository readerRepository;
     private final TokenProvider tokenProvider;
-    private final TokenComponents tokenUtils;
+    private final TokenComponent tokenUtils;
 
     @Value("${spring.security.oauth2.client.registration.naver.client-id}")
     private String NAVER_CLIENT_ID;
@@ -87,14 +87,14 @@ public class AuthService {
     }
 
     public JwtDto refresh(RefreshDto refreshDto, String token) {
-        token = TokenComponents.removeTokenHeader(token, "Bearer");
+        token = TokenComponent.removeTokenHeader(token, "Bearer");
         Optional<ReaderEntity> optionalReader = readerRepository.findByEmail(tokenUtils.getEmail(token));
         if(optionalReader.isEmpty()) {
             log.info("유효하지 않은 사용자입니다.");
             return null;
         }
         String refreshToken = refreshDto.getRefreshToken();
-        refreshToken = TokenComponents.removeTokenHeader(refreshToken, "Bearer ");
+        refreshToken = TokenComponent.removeTokenHeader(refreshToken, "Bearer ");
         boolean result = tokenProvider.validateToken(refreshToken);
         if(!result) {
             log.info("유효하지 않은 토큰입니다.");
