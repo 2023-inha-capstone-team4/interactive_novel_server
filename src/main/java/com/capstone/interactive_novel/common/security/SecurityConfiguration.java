@@ -32,7 +32,7 @@ public class SecurityConfiguration {
                     .sessionCreationPolicy(SessionCreationPolicy.NEVER)
                 .and()
                     .authorizeRequests()
-                        .antMatchers("/**").permitAll()
+                        .antMatchers("/**", "/swagger-resources/**").permitAll()
                         .anyRequest().authenticated()
                 .and()
                     .logout()

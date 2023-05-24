@@ -1,5 +1,6 @@
 package com.capstone.interactive_novel.common.security;
 
+import com.capstone.interactive_novel.common.components.FilterUrlComponents;
 import com.capstone.interactive_novel.common.components.TokenComponents;
 import com.capstone.interactive_novel.common.dto.ErrorResponseDto;
 import com.capstone.interactive_novel.common.exception.ErrorCode;
@@ -17,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Set;
 
 import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
 import static com.capstone.interactive_novel.common.type.Role.*;
@@ -29,20 +31,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String TOKEN_PREFIX = "Bearer ";
     private final TokenProvider tokenProvider;
     private final TokenComponents tokenComponents;
+    private final FilterUrlComponents filterUrlComponents;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(checkUrl(request, "/sign/in/oauth2") ||
-           checkUrl(request, "/sign/up/reader") ||
-           checkUrl(request, "/sign/up/publisher") ||
-           checkUrl(request, "/sign/in/publisher") ||
-           checkUrl(request, "/sign/in/reader") ||
-           checkUrl(request, "/sign/email-auth") ||
-           checkUrl(request, "/sign/in/oauth2/naver") ||
-           checkUrl(request, "/novel/list") ||
-           checkUrl(request, "/novel/score") ||
-           checkUrl(request, "/novel/review/list") ||
-           checkUrl(request, "/novel/comment/list")) {
+        if(checkUrl(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -81,9 +74,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private boolean checkUrl(HttpServletRequest request, String url) {
+    private boolean checkUrl(HttpServletRequest request) {
+        Set<String> filterUrlSet = filterUrlComponents.filterUrlSet();
 
-        return request.getServletPath().startsWith(url);
+        return filterUrlSet.stream()
+                .anyMatch(request.getServletPath()::startsWith);
     }
 
     private void setErrorResponse(HttpServletResponse response, ErrorCode errorCode) {
