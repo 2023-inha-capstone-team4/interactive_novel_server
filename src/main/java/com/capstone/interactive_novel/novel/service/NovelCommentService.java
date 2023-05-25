@@ -92,7 +92,7 @@ public class NovelCommentService {
         throw new INovelException(INVALID_PARAMETER_VALUE);
     }
 
-    public void sendRecommendCommentInfo(ReaderEntity reader, Long commentId) {
+    public void sendRecommendCommentMessage(ReaderEntity reader, Long commentId) {
         CommentRecommendMessage message = new CommentRecommendMessage(reader.getId(), commentId);
         producerComponents.sendCommentRecommendMessage(COMMENT_RECOMMEND, message);
     }

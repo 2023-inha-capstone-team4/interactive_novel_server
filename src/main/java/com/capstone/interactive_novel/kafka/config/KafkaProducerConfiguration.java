@@ -1,7 +1,9 @@
 package com.capstone.interactive_novel.kafka.config;
 
 import com.capstone.interactive_novel.kafka.message.CommentRecommendMessage;
+import com.capstone.interactive_novel.kafka.message.NovelReviewScoreMessage;
 import com.capstone.interactive_novel.kafka.serializer.CommentRecommendSerializer;
+import com.capstone.interactive_novel.kafka.serializer.NovelReviewScoreSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -33,5 +35,19 @@ public class KafkaProducerConfiguration {
     @Bean
     public KafkaTemplate<String, CommentRecommendMessage> commentRecommendKafkaTemplate() {
         return new KafkaTemplate<>(commentRecommendProducerFactory());
+    }
+
+    @Bean
+    public ProducerFactory<String, NovelReviewScoreMessage> novelReviewScoreProducerFactory() {
+        Map<String, Object> configs = new HashMap<>();
+        configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+        configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, NovelReviewScoreSerializer.class);
+        return new DefaultKafkaProducerFactory<>(configs);
+    }
+
+    @Bean
+    public KafkaTemplate<String, NovelReviewScoreMessage> novelReviewScoreKafkaTemplate() {
+        return new KafkaTemplate<>(novelReviewScoreProducerFactory());
     }
 }

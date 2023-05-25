@@ -1,5 +1,6 @@
 package com.capstone.interactive_novel.novel.controller;
 
+import com.capstone.interactive_novel.kafka.message.NovelReviewScoreMessage;
 import com.capstone.interactive_novel.novel.dto.NovelReviewDto;
 import com.capstone.interactive_novel.novel.dto.NovelReviewInputDto;
 import com.capstone.interactive_novel.novel.service.NovelReviewService;
@@ -18,17 +19,20 @@ public class NovelReviewController {
     private final NovelReviewService novelReviewService;
 
     @PostMapping("/{novelId}")
-    public ResponseEntity<NovelReviewDto> createNovelReview(@AuthenticationPrincipal ReaderEntity reader,
-                                                            @PathVariable Long novelId,
-                                                            @RequestBody NovelReviewInputDto novelReviewInputDto) {
-        return ResponseEntity.ok(novelReviewService.createNovelReview(reader, novelId, novelReviewInputDto.getReview(), novelReviewInputDto.getNovelScore()));
+    public ResponseEntity<?> createNovelReview(@AuthenticationPrincipal ReaderEntity reader,
+                                               @PathVariable Long novelId,
+                                               @RequestBody NovelReviewInputDto novelReviewInputDto) {
+        NovelReviewScoreMessage message = novelReviewService.createNovelReview(reader, novelId, novelReviewInputDto.getReview(), novelReviewInputDto.getNovelScore());
+        novelReviewService.sendNovelReviewScoreMessage(message);
+        return ResponseEntity.ok(null);
     }
 
     @PatchMapping("/{novelId}/{novelReviewId}/deactivate")
     public ResponseEntity<String> deactivateNovelReview(@AuthenticationPrincipal ReaderEntity reader,
                                                         @PathVariable Long novelId,
                                                         @PathVariable Long novelReviewId) {
-        novelReviewService.deactivateNovelReview(reader, novelId, novelReviewId);
+        NovelReviewScoreMessage message = novelReviewService.deactivateNovelReview(reader, novelId, novelReviewId);
+        novelReviewService.sendNovelReviewScoreMessage(message);
         return ResponseEntity.ok("Deactivated");
     }
 

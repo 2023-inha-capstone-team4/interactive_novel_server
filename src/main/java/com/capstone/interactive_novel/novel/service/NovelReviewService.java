@@ -2,6 +2,8 @@ package com.capstone.interactive_novel.novel.service;
 
 import com.capstone.interactive_novel.common.exception.ErrorCode;
 import com.capstone.interactive_novel.common.exception.INovelException;
+import com.capstone.interactive_novel.kafka.components.ProducerComponents;
+import com.capstone.interactive_novel.kafka.message.NovelReviewScoreMessage;
 import com.capstone.interactive_novel.novel.domain.NovelEntity;
 import com.capstone.interactive_novel.novel.domain.NovelReviewEntity;
 import com.capstone.interactive_novel.novel.dto.NovelReviewDto;
@@ -11,12 +13,12 @@ import com.capstone.interactive_novel.novel.repository.NovelReviewRepositoryQuer
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
 import static com.capstone.interactive_novel.common.type.PublisherType.READER;
+import static com.capstone.interactive_novel.kafka.type.KafkaTopicType.NOVEL_REVIEW_SCORE;
 import static com.capstone.interactive_novel.novel.domain.NovelReviewStatus.AVAILABLE;
 import static com.capstone.interactive_novel.novel.domain.NovelReviewStatus.DEACTIVATED;
 
@@ -26,12 +28,12 @@ public class NovelReviewService {
     private final NovelRepository novelRepository;
     private final NovelReviewRepository novelReviewRepository;
     private final NovelReviewRepositoryQuerydsl novelReviewRepositoryQuerydsl;
+    private final ProducerComponents producerComponents;
 
-    @Transactional
-    public NovelReviewDto createNovelReview(ReaderEntity reader,
-                                            Long novelId,
-                                            String review,
-                                            int novelScore) {
+    public NovelReviewScoreMessage createNovelReview(ReaderEntity reader,
+                                                     Long novelId,
+                                                     String review,
+                                                     int novelScore) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new INovelException(ErrorCode.NOVEL_NOT_FOUND));
         if(novelReviewRepository.findByReaderAndNovelReviewStatus(reader, AVAILABLE).isPresent()) {
@@ -44,10 +46,6 @@ public class NovelReviewService {
             throw new INovelException(WRONG_NOVEL_SCORE_VALUE);
         }
 
-        novel.setTotalScore(novel.getTotalScore() + novelScore);
-        novel.setReviewerAmount(novel.getReviewerAmount() + 1);
-        novelRepository.save(novel);
-
         NovelReviewEntity novelReview = NovelReviewEntity.builder()
                 .reader(reader)
                 .review(review)
@@ -59,11 +57,14 @@ public class NovelReviewService {
                 .publisherType(READER)
                 .build();
         novelReviewRepository.save(novelReview);
-        return NovelReviewDto.of(novelReview.getId(), novelReview.getReviewerName(), novelReview.getReviewerId(), novelReview.getReview(), novelReview.getNovel().getId(), novelReview.getNovelScore(), novelReview.getPublisherType());
+        return NovelReviewScoreMessage.builder()
+                .novelId(novelId)
+                .reviewScore(novelScore)
+                .reviewerCount(1)
+                .build();
     }
 
-    @Transactional
-    public void deactivateNovelReview(ReaderEntity reader, Long novelId, Long reviewId) {
+    public NovelReviewScoreMessage deactivateNovelReview(ReaderEntity reader, Long novelId, Long reviewId) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
         NovelReviewEntity novelReview = novelReviewRepository.findById(reviewId)
@@ -78,8 +79,22 @@ public class NovelReviewService {
         novelReview.setNovelReviewStatus(DEACTIVATED);
         novelReviewRepository.save(novelReview);
 
-        novel.setTotalScore(novel.getTotalScore() - novelReview.getNovelScore());
-        novel.setReviewerAmount(novel.getReviewerAmount() - 1);
+        return NovelReviewScoreMessage.builder()
+                .novelId(novelId)
+                .reviewScore(novelReview.getNovelScore() * (-1))
+                .reviewerCount(-1)
+                .build();
+    }
+
+    public void sendNovelReviewScoreMessage(NovelReviewScoreMessage message) {
+        producerComponents.sendNovelReviewScoreMessage(NOVEL_REVIEW_SCORE, message);
+    }
+
+    public void processNovelReviewScoreMessage(Long novelId, Integer novelScore, Integer reviewerCount) {
+        NovelEntity novel = novelRepository.findById(novelId)
+                        .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
+        novel.setTotalScore(novel.getTotalScore() + novelScore);
+        novel.setReviewerAmount(novel.getReviewerAmount() + reviewerCount);
         novelRepository.save(novel);
     }
 

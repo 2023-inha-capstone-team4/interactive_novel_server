@@ -2,7 +2,9 @@ package com.capstone.interactive_novel.kafka.config;
 
 import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.kafka.message.CommentRecommendMessage;
+import com.capstone.interactive_novel.kafka.message.NovelReviewScoreMessage;
 import com.capstone.interactive_novel.kafka.serializer.CommentRecommendDeserializer;
+import com.capstone.interactive_novel.kafka.serializer.NovelReviewScoreDeserializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,6 +45,25 @@ public class KafkaConsumerConfiguration {
     public ConcurrentKafkaListenerContainerFactory<String, CommentRecommendMessage> commentRecommendKafkaListener() {
         ConcurrentKafkaListenerContainerFactory<String, CommentRecommendMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(commentRecommendConsumerFactory());
+        factory.setCommonErrorHandler(customErrorHandler());
+        return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String, NovelReviewScoreMessage> novelReviewScoreConsumerFactory() {
+        Map<String, Object> configs = new HashMap<>();
+        configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+        configs.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        configs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
+        configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, NovelReviewScoreDeserializer.class);
+        return new DefaultKafkaConsumerFactory<>(configs);
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, NovelReviewScoreMessage> novelReviewScoreKafkaListener() {
+        ConcurrentKafkaListenerContainerFactory<String, NovelReviewScoreMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(novelReviewScoreConsumerFactory());
         factory.setCommonErrorHandler(customErrorHandler());
         return factory;
     }
