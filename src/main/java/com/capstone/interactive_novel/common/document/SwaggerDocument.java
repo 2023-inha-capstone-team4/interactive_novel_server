@@ -44,4 +44,48 @@ public class SwaggerDocument {
         public static final String viewReaderInfoValue = "유저 정보 보기";
         public static final String viewReaderInfoNotes = "본인의 유저 정보를 확인하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br> 성공 시 해당 유저 정보가 반환된다.";
     }
+
+    public static class documentAboutNovelController {
+        // createNovelByReader
+        public static final String createNovelByReaderValue = "READER 소설 작성";
+        public static final String createNovelByReaderNotes = "READER 권한의 사용자가 소설을 작성하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>추가적으로 <b>소설 대표 이미지</b>, <b>소설 제목</b>, <b>소설 소개글</b>을 <u>form-data</u>로 전달한다. <br>소설 제목은 중복될 수 없다. <br>성공 시 소설 정보를 반환한다.";
+
+        // modifyNovelByReader
+        public static final String modifyNovelByReaderValue = "READER 소설 편집";
+        public static final String modifyNovelByReaderNotes = "READER 권한의 사용자가 소설을 편집하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>추가적으로 <b>소설 대표 이미지</b>, <b>소설 소개글</b>을 <u>form-data</u>로 전달한다. <br>소설 제목은 수정할 수 없다. <br>성공 시 소설 정보를 반환한다.";
+
+        // deactivateNovelByReader
+        public static final String deactivateNovelByReaderValue = "READER 소설 비활성화";
+        public static final String deactivateNovelByReaderNotes = "READER 권한의 사용자가 소설을 비활성화하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>해당 소설과, 소설의 모든 회차를 비활성화한다. <br>성공 시 'Deactivated'를 반환한다.";
+
+        // createNovelDetailByReader
+        public static final String createNovelDetailByReaderValue = "READER 소설 회차 작성";
+        public static final String createNovelDetailByReaderNotes = "READER 권한의 사용자가 소설 회차를 작성하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>추가적으로 <b>소설 회차 대표 이미지</b>, <b>소설 회차 제목</b>, <b>소설 회차 소개</b>, <b>소설 데이터 파일</b>, <b>소설 미디어 파일 리스트</b>를 전달한다. <br>성공 시 소설 회차 정보를 반환한다.";
+
+        // modifyNovelDetailByReader
+        public static final String modifyNovelDetailByReaderValue = "READER 소설 회차 편집";
+        public static final String modifyNovelDetailByReaderNotes = "READER 권한의 사용자가 소설 회차를 편집하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>추가적으로 <b>소설 회차 대표 이미지</b>, <b>소설 회차 제목</b>, <b>소설 회차 소개</b>, <b>소설 데이터 파일</b>, <b>소설 미디어 파일 리스트</b>를 전달한다. <br>소설 전체 정보를 불러와서 덮어씌우는 형태로 진행된다. <br>성공 시 소설 회차 정보를 반환한다.";
+
+        // deactivateNovelDetailByReader
+        public static final String deactivateNovelDetailByReaderValue = "READER 소설 회차 비활성화";
+        public static final String deactivateNovelDetailByReaderNotes = "READER 권한의 사용자가 소설 회차를 비활성화하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>성공 시 'Deactivated'를 반환한다.";
+
+        // uploadFileOnNovelDetailByReader
+        public static final String uploadFileOnNovelDetailByReaderValue = "READER 소설 회차 미디어 파일 업로드";
+        public static final String uploadFileOnNovelDetailByReaderNotes = "READER 권한의 사용자가 소설 회차에 이미지나 사운드를 업로드하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>추가적으로 <b>파일 목록</b>과 <b>파일 타입</b>을 전달한다. <br><b>파일 타입</b>의 경우 인자로 <u>image</u>, <u>sound</u>만 받을 수 있다. <br><b>image</b>: <u>.png</u>, <u>.jpg</u>, <u>.jpeg</u>, <u>.webp</u> 이용 가능. <br><b>sound</b>: <u>.mp3</u>, <u>.wav</u> 이용 가능. 성공 시 파일 리스트를 배열로 전달한다.";
+
+        // createNovelByPublisher
+
+        // viewListOfNewNovel
+        public static final String viewListOfNewNovelValue = "신규 소설 목록 조회";
+        public static final String viewListOfNewNovelNotes = "신규 소설 목록을 조회. 성공 시 신규 소설 목록을 최대 10개 조회한다.";
+
+        // viewListOfPopularNovel
+        public static final String viewListOfPopularNovelValue = "인기 소설 목록 조회";
+        public static final String viewListOfPopularNovelNotes = "인기 소설 목록을 조회하기 위해 <b>시작 인덱스</b>와 <b>끝 인덱스</b>를 전달한다. <br>시작 인덱스는 0번부터 시작한다. <br>성공 시 인기 소설 목록을 조회한다.";
+
+        // viewNovelAverageScore
+        public static final String viewNovelAverageScoreValue = "소설 평점 조회";
+        public static final String viewNovelAverageScoreNotes = "해당 소설의 평점을 조회. 성공 시 평점을 계산하여 조회한다.";
+    }
 }
