@@ -78,14 +78,36 @@ public class SwaggerDocument {
 
         // viewListOfNewNovel
         public static final String viewListOfNewNovelValue = "신규 소설 목록 조회";
-        public static final String viewListOfNewNovelNotes = "신규 소설 목록을 조회. 성공 시 신규 소설 목록을 최대 10개 조회한다.";
+        public static final String viewListOfNewNovelNotes = "신규 소설 목록을 조회. 성공 시 신규 소설 목록이 최대 10개 반환된다.";
 
         // viewListOfPopularNovel
         public static final String viewListOfPopularNovelValue = "인기 소설 목록 조회";
-        public static final String viewListOfPopularNovelNotes = "인기 소설 목록을 조회하기 위해 <b>시작 인덱스</b>와 <b>끝 인덱스</b>를 전달한다. <br>시작 인덱스는 0번부터 시작한다. <br>성공 시 인기 소설 목록을 조회한다.";
+        public static final String viewListOfPopularNovelNotes = "인기 소설 목록을 조회하기 위해 <b>시작 인덱스</b>와 <b>끝 인덱스</b>를 전달한다. <br>시작 인덱스는 0번부터 시작한다. <br>성공 시 인기 소설 목록이 반환된다.";
 
         // viewNovelAverageScore
         public static final String viewNovelAverageScoreValue = "소설 평점 조회";
         public static final String viewNovelAverageScoreNotes = "해당 소설의 평점을 조회. 성공 시 평점을 계산하여 조회한다.";
+    }
+
+    public static class documentAboutNovelCommentController {
+        // createComment
+        public static final String createCommentValue = "댓글 작성";
+        public static final String createCommentNotes = "해당하는 소설 회차에 댓글을 달기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>추가적으로 <b>댓글 내용</b>을 기입한다. <br>성공 시 댓글 내용이 반환된다.";
+
+        // modifyComment
+        public static final String modifyCommentValue = "댓글 편집";
+        public static final String modifyCommentNotes = "해당하는 소설 회차에 댓글을 수정하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>추가적으로 <b>댓글 내용</b>을 기입한다. <br>성공 시 댓글 내용이 반환된다.";
+
+        // deactivateComment
+        public static final String deactivateCommentValue = "댓글 비활성화";
+        public static final String deactivateCommentNotes = "해당하는 소설 회차에 댓글을 비활성화하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>성공 시 'Deactivated'를 반환한다.";
+
+        // viewListOfComment
+        public static final String viewListOfCommentValue = "댓글 목록 조회";
+        public static final String viewListOfCommentNotes = "해당하는 소설 회차의 댓글을 조회하기 위해 <b>시작 인덱스</b>, <b>끝 인덱스</b>, <b>메소드</b>를 전달. <br><b>메소드</b>의 경우 <u>new</u>와 <u>popular</u>를 입력으로 받을 수 있다. <br>성공 시 댓글 목록이 해당 메소드에 따라 내림차순으로 정렬되어 반환된다.";
+
+        // recommendComment
+        public static final String recommendCommentValue = "댓글 추천";
+        public static final String recommendCommentNotes = "해당하는 댓글을 추천 또는 취소하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>추천된 상태면 취소를, 추천하지 않은 상태면 추천을 하도록 하며, 비동기적으로 구현되어 있다. <br>성공 시 별도의 반환값은 없다.";
     }
 }
