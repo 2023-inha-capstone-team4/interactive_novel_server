@@ -1,4 +1,4 @@
-package com.capstone.interactive_novel.common.config;
+package com.capstone.interactive_novel.fcm.config;
 
 import com.capstone.interactive_novel.common.exception.ErrorCode;
 import com.capstone.interactive_novel.common.exception.INovelException;
@@ -15,7 +15,7 @@ import java.io.IOException;
 
 @Slf4j
 @Configuration
-public class FirebaseConfiguration {
+public class FcmConfiguration {
     @Value("${fcm.key.path}")
     private String fcmPrivateKey;
 
