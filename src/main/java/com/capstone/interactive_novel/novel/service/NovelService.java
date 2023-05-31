@@ -2,6 +2,7 @@ package com.capstone.interactive_novel.novel.service;
 
 import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.common.service.S3Service;
+import com.capstone.interactive_novel.fcm.event.createNovel.BookmarkedReaderCreatedNewNovelEvent;
 import com.capstone.interactive_novel.novel.domain.NovelDetailStatus;
 import com.capstone.interactive_novel.novel.domain.NovelEntity;
 import com.capstone.interactive_novel.novel.domain.NovelStatus;
@@ -12,6 +13,7 @@ import com.capstone.interactive_novel.novel.repository.NovelRepositoryQuerydsl;
 import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -31,6 +33,7 @@ public class NovelService {
     private final NovelRepository novelRepository;
     private final NovelRepositoryQuerydsl novelRepositoryQuerydsl;
     private final NovelDetailRepositoryQuerydsl novelDetailRepositoryQuerydsl;
+    private final ApplicationEventPublisher eventPublisher;
     private final S3Service s3Service;
     private static final String NOVEL_DOMAIN = "novel";
 
@@ -50,6 +53,8 @@ public class NovelService {
         String imageUrl = s3Service.uploadFile(file, NOVEL_DOMAIN, novelName);
         NovelEntity novel = NovelEntity.createNovelByReader(reader, novelName, reader.getUsername(), reader.getId(), novelIntroduce, imageUrl);
         novelRepository.save(novel);
+
+        eventPublisher.publishEvent(new BookmarkedReaderCreatedNewNovelEvent(reader, novel));
 
         return NovelDto.of(novel.getId(), novel.getNovelName(), reader.getUsername(), reader.getId(), novel.getNovelIntroduce(), READER, novel.getNovelImageUrl(), novel.getTotalScore());
     }

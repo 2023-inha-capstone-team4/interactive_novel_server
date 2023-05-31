@@ -98,7 +98,7 @@ public class ReaderService implements UserDetailsService {
     }
 
     public ReaderDto.profileImg modifyReaderProfileImg(ReaderEntity reader, MultipartFile file) {
-        String imageUrl = s3Service.uploadFile(file, "profile/reader", String.valueOf(reader.getId()));
+        String imageUrl = s3Service.uploadFile(file, "profile/author", String.valueOf(reader.getId()));
         reader.setProfileImgUrl(imageUrl);
         readerRepository.save(reader);
 

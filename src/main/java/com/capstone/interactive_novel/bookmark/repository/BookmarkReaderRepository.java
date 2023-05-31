@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface BookmarkReaderRepository extends JpaRepository<BookmarkReaderEntity, String> {
     Optional<BookmarkReaderEntity> findByReaderAndTarget(ReaderEntity reader, ReaderEntity target);
     Optional<List<BookmarkReaderEntity>> findAllByReader(ReaderEntity reader);
+    Optional<List<BookmarkReaderEntity>> findAllByTarget(ReaderEntity target);
 
 }

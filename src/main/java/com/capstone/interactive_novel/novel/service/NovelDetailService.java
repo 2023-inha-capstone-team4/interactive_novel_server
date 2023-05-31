@@ -4,6 +4,8 @@ import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.common.service.S3Service;
 import com.capstone.interactive_novel.common.type.FileDomain;
 import com.capstone.interactive_novel.common.utils.FileUtils;
+import com.capstone.interactive_novel.fcm.event.createNovelDetail.BookmarkedNovelCreatedNewNovelDetailEvent;
+import com.capstone.interactive_novel.fcm.event.createNovelDetail.BookmarkedReaderCreatedNewNovelDetailEvent;
 import com.capstone.interactive_novel.novel.domain.NovelDetailEntity;
 import com.capstone.interactive_novel.novel.domain.NovelEntity;
 import com.capstone.interactive_novel.novel.dto.NovelDetailDto;
@@ -12,6 +14,7 @@ import com.capstone.interactive_novel.novel.repository.NovelDetailRepository;
 import com.capstone.interactive_novel.novel.repository.NovelRepository;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +33,8 @@ public class NovelDetailService {
     private final NovelDetailRepository novelDetailRepository;
     private final S3Service s3Service;
 
+    private final ApplicationEventPublisher eventPublisher;
+
     public NovelDetailDto createNovelDetailByReader(ReaderEntity reader,
                                                     Long novelId,
                                                     MultipartFile file,
@@ -47,6 +52,9 @@ public class NovelDetailService {
         String imageUrl = s3Service.uploadFile(file, "novel", novel.getNovelName());
         NovelDetailEntity novelDetail = NovelDetailEntity.setNovelDetail(novelDetailName, novelDetailIntroduce, imageUrl, novel, novelDataFile, mediaDto);
         novelDetailRepository.save(novelDetail);
+
+        eventPublisher.publishEvent(new BookmarkedNovelCreatedNewNovelDetailEvent(novel, novelDetail));
+        eventPublisher.publishEvent(new BookmarkedReaderCreatedNewNovelDetailEvent(reader, novelDetail));
 
         return NovelDetailDto.builder()
                 .id(novelDetail.getId())
