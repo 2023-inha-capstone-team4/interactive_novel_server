@@ -11,7 +11,9 @@ import com.capstone.interactive_novel.novel.repository.NovelDetailRepositoryQuer
 import com.capstone.interactive_novel.novel.repository.NovelRepository;
 import com.capstone.interactive_novel.novel.repository.NovelRepositoryQuerydsl;
 import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
+import com.capstone.interactive_novel.publisher.repository.PublisherRepository;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
+import com.capstone.interactive_novel.reader.repository.ReaderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,8 @@ import static com.capstone.interactive_novel.novel.domain.NovelStatus.PAY;
 @RequiredArgsConstructor
 @Service
 public class NovelService {
+    private final ReaderRepository readerRepository;
+    private final PublisherRepository publisherRepository;
     private final NovelRepository novelRepository;
     private final NovelRepositoryQuerydsl novelRepositoryQuerydsl;
     private final NovelDetailRepositoryQuerydsl novelDetailRepositoryQuerydsl;
@@ -92,6 +96,10 @@ public class NovelService {
         novelRepository.save(novel);
     }
 
+    public List<NovelDto> viewOwnNovelListByReader(ReaderEntity reader, long startIdx, long endIdx) {
+        return novelRepositoryQuerydsl.viewListOfNovelAboutReader(reader, startIdx, endIdx);
+    }
+
     // Publisher 관련
 
     public NovelDto createNovelByPublisher(PublisherEntity publisher,
@@ -130,10 +138,29 @@ public class NovelService {
         return novelRepositoryQuerydsl.viewListOfPopularNovel(startIdx, endIdx);
     }
 
+    public List<NovelDto> viewListOfAuthorNovel(Long authorId, String type, long startIdx, long endIdx) {
+        switch (type) {
+            case "reader" -> {
+                ReaderEntity reader = readerRepository.findById(authorId)
+                        .orElseThrow(() -> new INovelException(USER_NOT_FOUND));
+                return novelRepositoryQuerydsl.viewListOfNovelAboutReader(reader, startIdx, endIdx);
+            }
+            case "publisher" -> {
+                PublisherEntity publisher = publisherRepository.findById(authorId)
+                        .orElseThrow(() -> new INovelException(USER_NOT_FOUND));
+                return novelRepositoryQuerydsl.viewListOfNovelAboutPublisher(publisher, startIdx, endIdx);
+            }
+            default -> {
+            }
+        }
+        throw new INovelException(INVALID_PARAMETER_VALUE);
+    }
+
     public Double viewNovelAverageScore(Long novelId) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
         return novel.getReviewerAmount() == 0 ?
                 0.0 : ((double) novel.getTotalScore()) / ((double) novel.getReviewerAmount());
     }
+
 }

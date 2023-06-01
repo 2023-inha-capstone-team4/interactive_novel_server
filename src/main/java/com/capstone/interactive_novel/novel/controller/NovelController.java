@@ -96,6 +96,14 @@ public class NovelController {
         return ResponseEntity.ok(novelDetailService.uploadFilesByReader(reader, novelId, novelDetailId, files, fileType));
     }
 
+    @ApiOperation(value = viewListOfOwnNovelByReaderValue, notes = viewListOfOwnNovelByReaderNotes)
+    @GetMapping("/reader/list")
+    public ResponseEntity<List<NovelDto>> viewOwnNovelListByReader(@AuthenticationPrincipal ReaderEntity reader,
+                                                                   @RequestParam("startIdx") long startIdx,
+                                                                   @RequestParam("endIdx") long endIdx) {
+        return ResponseEntity.ok(novelService.viewOwnNovelListByReader(reader, startIdx, endIdx));
+    }
+
     // Publisher 관련
 
     @PostMapping("/publisher")
@@ -119,6 +127,15 @@ public class NovelController {
     public ResponseEntity<List<NovelDto>> viewListOfPopularNovel(@RequestParam("startIdx") long startIdx,
                                                                  @RequestParam("endIdx") long endIdx) {
         return ResponseEntity.ok(novelService.viewListOfPopularNovel(startIdx, endIdx));
+    }
+
+    @ApiOperation(value = viewListOfAuthorNovelValue, notes = viewListOfAuthorNovelNotes)
+    @GetMapping("/list/author/{authorId}")
+    public ResponseEntity<List<NovelDto>> viewListOfAuthorNovel(@PathVariable Long authorId,
+                                                                @RequestParam("type") String publisherType,
+                                                                @RequestParam("startIdx") long startIdx,
+                                                                @RequestParam("endIdx") long endIdx) {
+        return ResponseEntity.ok(novelService.viewListOfAuthorNovel(authorId, publisherType, startIdx, endIdx));
     }
 
     @ApiOperation(value = viewNovelAverageScoreValue, notes = viewNovelAverageScoreNotes)

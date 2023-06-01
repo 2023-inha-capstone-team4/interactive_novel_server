@@ -74,6 +74,10 @@ public class SwaggerDocument {
         public static final String uploadFileOnNovelDetailByReaderValue = "READER 소설 회차 미디어 파일 업로드";
         public static final String uploadFileOnNovelDetailByReaderNotes = "READER 권한의 사용자가 소설 회차에 이미지나 사운드를 업로드하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>추가적으로 <b>파일 목록</b>과 <b>파일 타입</b>을 전달한다. <br><b>파일 타입</b>의 경우 인자로 <u>image</u>, <u>sound</u>만 받을 수 있다. <br><b>image</b>: <u>.png</u>, <u>.jpg</u>, <u>.jpeg</u>, <u>.webp</u> 이용 가능. <br><b>sound</b>: <u>.mp3</u>, <u>.wav</u> 이용 가능. 성공 시 파일 리스트를 배열로 전달한다.";
 
+        // viewListOfOwnNovelByReader
+        public static final String viewListOfOwnNovelByReaderValue = "READER 소설 목록 조회";
+        public static final String viewListOfOwnNovelByReaderNotes = "READER 권한의 사용자가 자신의 소설 목록을 조회하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>추가적으로 <b>시작 인덱스</b>와 <b>끝 인덱스</b>를 전달한다. <br>시작 인덱스는 0번부터 시작한다. <br>성공 시 자신의 소설 목록이 반환된다.";
+
         // createNovelByPublisher
 
         // viewListOfNewNovel
@@ -83,6 +87,10 @@ public class SwaggerDocument {
         // viewListOfPopularNovel
         public static final String viewListOfPopularNovelValue = "인기 소설 목록 조회";
         public static final String viewListOfPopularNovelNotes = "인기 소설 목록을 조회하기 위해 <b>시작 인덱스</b>와 <b>끝 인덱스</b>를 전달한다. <br>시작 인덱스는 0번부터 시작한다. <br>성공 시 인기 소설 목록이 반환된다.";
+
+        // viewListOfAuthorNovel
+        public static final String viewListOfAuthorNovelValue = "작가 소설 목록 조회";
+        public static final String viewListOfAuthorNovelNotes = "해당 작가의 소설 목록을 조회하기 위해 <b>작가의 ID번호</b>와 <b>작가 타입</b>, <b>시작 인덱스</b>, <b>끝 인덱스</b>를 전달한다. <br> 시작 인덱스는 0번부터 시작한다. <br><b>작가 타입</b>의 경우 <u>reader</u>와 <u>publisher</u>를 입력으로 받을 수 있다. <br>성공 시 해당 작가의 소설 목록이 반환된다.";
 
         // viewNovelAverageScore
         public static final String viewNovelAverageScoreValue = "소설 평점 조회";
