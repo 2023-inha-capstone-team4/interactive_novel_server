@@ -55,7 +55,7 @@ public class ReaderService implements UserDetailsService {
         String subject = "Interactive Novel Service Subscription Authentication Procedure";
         String message = "<h1>Interactive Novel Service Subscription Authentication Procedure</h1>" +
                          "<br><p>Please click the link below to complete the authentication.</p>" +
-                         "<div><a target='_blank' href='http://localhost:8080/sign/email-auth?id=" +
+                         "<div><a target='_blank' href='http://34.64.185.90:8080/sign/email-auth?id=" +
                          uuid +"'> Verify </a></div>";
         mailComponent.sendMail(email, subject, message);
     }
