@@ -24,7 +24,7 @@ public class NovelEntity {
     @ManyToOne
     private PublisherEntity publisher;
 
-    @Column(unique = true)
+    @Column(unique = true, columnDefinition = "VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci")
     private String novelName;
 
     @Column(columnDefinition = "VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci")
@@ -35,6 +35,7 @@ public class NovelEntity {
     private Long totalScore;
     private Long reviewerAmount;
 
+    @Column(columnDefinition = "VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci")
     private String novelIntroduce;
 
     private String novelImageUrl;
