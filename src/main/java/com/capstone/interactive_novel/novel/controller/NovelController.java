@@ -116,6 +116,7 @@ public class NovelController {
     }
 
     // 전체 관련
+    @ApiOperation(value = viewNovelDetailValue, notes = viewNovelDetailNotes)
     @GetMapping("/view/{novelDetailId}")
     public ResponseEntity<NovelDetailDto> viewNovelDetail(@PathVariable Long novelDetailId) {
         return ResponseEntity.ok(novelDetailService.viewNovelDetail(novelDetailId));
@@ -143,6 +144,8 @@ public class NovelController {
         return ResponseEntity.ok(novelService.viewListOfAuthorNovel(authorId, publisherType, startIdx, endIdx));
     }
 
+
+    @ApiOperation(value = viewListOfKeywordSearchValue, notes = viewListOfKeywordSearchNotes)
     @GetMapping("/list/search")
     public ResponseEntity<List<NovelDto>> viewListOfKeywordSearchNovel(@RequestParam("keyword") String keyword,
                                                                        @RequestParam("startIdx") long startIdx,
@@ -150,11 +153,12 @@ public class NovelController {
         return ResponseEntity.ok(novelService.viewListOfKeywordSearch(keyword, startIdx, endIdx));
     }
 
+    @ApiOperation(value = viewListOfNovelDetailValue, notes = viewListOfNovelDetailNotes)
     @GetMapping("/list/detail/{novelId}")
     public ResponseEntity<List<NovelDetailListDto>> viewListOfNovelDetail(@PathVariable Long novelId,
-                                                                      @RequestParam("order") String order,
-                                                                      @RequestParam("startIdx") long startIdx,
-                                                                      @RequestParam("endIdx") long endIdx) {
+                                                                          @RequestParam("order") String order,
+                                                                          @RequestParam("startIdx") long startIdx,
+                                                                          @RequestParam("endIdx") long endIdx) {
         return ResponseEntity.ok(novelDetailService.viewListOfNovelDetail(novelId, order, startIdx, endIdx));
     }
 

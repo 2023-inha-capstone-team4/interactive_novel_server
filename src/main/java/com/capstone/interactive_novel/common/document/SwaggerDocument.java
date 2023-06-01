@@ -80,6 +80,10 @@ public class SwaggerDocument {
 
         // createNovelByPublisher
 
+        // viewNovelDetail
+        public static final String viewNovelDetailValue = "소설 회차 조회";
+        public static final String viewNovelDetailNotes = "소설 회차 컨텐츠를 조회. 성공 시 소설 회차 컨텐츠에 대한 내용이 반환된다.";
+
         // viewListOfNewNovel
         public static final String viewListOfNewNovelValue = "신규 소설 목록 조회";
         public static final String viewListOfNewNovelNotes = "신규 소설 목록을 조회. 성공 시 신규 소설 목록이 최대 10개 반환된다.";
@@ -90,7 +94,15 @@ public class SwaggerDocument {
 
         // viewListOfAuthorNovel
         public static final String viewListOfAuthorNovelValue = "작가 소설 목록 조회";
-        public static final String viewListOfAuthorNovelNotes = "해당 작가의 소설 목록을 조회하기 위해 <b>작가의 ID번호</b>와 <b>작가 타입</b>, <b>시작 인덱스</b>, <b>끝 인덱스</b>를 전달한다. <br> 시작 인덱스는 0번부터 시작한다. <br><b>작가 타입</b>의 경우 <u>reader</u>와 <u>publisher</u>를 입력으로 받을 수 있다. <br>성공 시 해당 작가의 소설 목록이 반환된다.";
+        public static final String viewListOfAuthorNovelNotes = "해당 작가의 소설 목록을 조회하기 위해 <b>작가의 ID번호</b>와 <b>작가 타입</b>, <b>시작 인덱스</b>, <b>끝 인덱스</b>를 전달한다. <br>시작 인덱스는 0번부터 시작한다. <br><b>작가 타입</b>의 경우 <u>reader</u>와 <u>publisher</u>를 입력으로 받을 수 있다. <br>성공 시 해당 작가의 소설 목록이 반환된다.";
+
+        // viewListOfKeywordSearch
+        public static final String viewListOfKeywordSearchValue = "키워드 검색을 통한 소설 목록 조회";
+        public static final String viewListOfKeywordSearchNotes = "소설 목록을 조회하기 위해 <b>키워드</b>와 <b>시작 인덱스</b>, <b>끝 인덱스</b>를 전달한다. <br>성공 시 해당 키워드를 포함한 소설 목록이 반환된다.";
+
+        // viewListOfNovelDetail
+        public static final String viewListOfNovelDetailValue = "소설 회차 목록 조회";
+        public static final String viewListOfNovelDetailNotes = "소설 회차 목록을 조회하기 위해 <b>정렬 방법</b>과 <b>시작 인덱스</b>, <b>끝 인덱스</b>를 전달. <b>정렬 방식</b>은 <u>desc</u>, <u>asc</u>를 입력으로 받을 수 있다. <br>성공 시 해당 정렬 방식으로 소설 회차 목록이 반환된다.";
 
         // viewNovelAverageScore
         public static final String viewNovelAverageScoreValue = "소설 평점 조회";
