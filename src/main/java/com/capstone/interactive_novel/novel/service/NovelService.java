@@ -156,6 +156,10 @@ public class NovelService {
         throw new INovelException(INVALID_PARAMETER_VALUE);
     }
 
+    public List<NovelDto> viewListOfKeywordSearch(String keyword, long startIdx, long endIdx) {
+        return novelRepositoryQuerydsl.viewListOfKeywordSearchNovel(keyword, startIdx, endIdx);
+    }
+
     public Double viewNovelAverageScore(Long novelId) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));

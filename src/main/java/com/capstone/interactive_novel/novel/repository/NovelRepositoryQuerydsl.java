@@ -88,4 +88,22 @@ public class NovelRepositoryQuerydsl {
                 .limit(endIdx - startIdx + 1)
                 .fetch();
     }
+
+    public List<NovelDto> viewListOfKeywordSearchNovel(String keyword, long startIdx, long endIdx) {
+        return jpaQueryFactory.select(Projections.constructor(NovelDto.class,
+                        novelEntity.id,
+                        novelEntity.novelName,
+                        novelEntity.authorName,
+                        novelEntity.authorId,
+                        novelEntity.novelIntroduce,
+                        novelEntity.publisherType,
+                        novelEntity.novelImageUrl,
+                        novelEntity.totalScore))
+                .from(novelEntity)
+                .where(novelEntity.novelStatus.ne(NovelStatus.DEACTIVATED).and(novelEntity.novelName.like("%" + keyword + "%")))
+                .orderBy(novelEntity.totalScore.desc())
+                .offset(startIdx)
+                .limit(endIdx - startIdx + 1)
+                .fetch();
+    }
 }

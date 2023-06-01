@@ -143,6 +143,13 @@ public class NovelController {
         return ResponseEntity.ok(novelService.viewListOfAuthorNovel(authorId, publisherType, startIdx, endIdx));
     }
 
+    @GetMapping("/list/search")
+    public ResponseEntity<List<NovelDto>> viewListOfKeywordSearchNovel(@RequestParam("keyword") String keyword,
+                                                                       @RequestParam("startIdx") long startIdx,
+                                                                       @RequestParam("endIdx") long endIdx) {
+        return ResponseEntity.ok(novelService.viewListOfKeywordSearch(keyword, startIdx, endIdx));
+    }
+
     @GetMapping("/list/detail/{novelId}")
     public ResponseEntity<List<NovelDetailListDto>> viewListOfNovelDetail(@PathVariable Long novelId,
                                                                       @RequestParam("order") String order,
