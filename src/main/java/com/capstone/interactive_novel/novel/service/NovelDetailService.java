@@ -9,8 +9,10 @@ import com.capstone.interactive_novel.fcm.event.createNovelDetail.BookmarkedRead
 import com.capstone.interactive_novel.novel.domain.NovelDetailEntity;
 import com.capstone.interactive_novel.novel.domain.NovelEntity;
 import com.capstone.interactive_novel.novel.dto.NovelDetailDto;
+import com.capstone.interactive_novel.novel.dto.NovelDetailListDto;
 import com.capstone.interactive_novel.novel.dto.NovelDetailMediaDto;
 import com.capstone.interactive_novel.novel.repository.NovelDetailRepository;
+import com.capstone.interactive_novel.novel.repository.NovelDetailRepositoryQuerydsl;
 import com.capstone.interactive_novel.novel.repository.NovelRepository;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ import static com.capstone.interactive_novel.novel.domain.NovelDetailStatus.DEAC
 public class NovelDetailService {
     private final NovelRepository novelRepository;
     private final NovelDetailRepository novelDetailRepository;
+    private final NovelDetailRepositoryQuerydsl novelDetailRepositoryQuerydsl;
     private final S3Service s3Service;
 
     private final ApplicationEventPublisher eventPublisher;
@@ -56,17 +59,7 @@ public class NovelDetailService {
         eventPublisher.publishEvent(new BookmarkedNovelCreatedNewNovelDetailEvent(novel, novelDetail));
         eventPublisher.publishEvent(new BookmarkedReaderCreatedNewNovelDetailEvent(reader, novelDetail));
 
-        return NovelDetailDto.builder()
-                .id(novelDetail.getId())
-                .novelId(novel.getId())
-                .novelDetailName(novelDetailName)
-                .novelDetailIntroduce(novelDetailIntroduce)
-                .publisherType(novelDetail.getPublisherType())
-                .authorName(reader.getUsername())
-                .novelImageUrl(imageUrl)
-                .totalScore(0L)
-                .mediaDto(mediaDto)
-                .build();
+        return NovelDetailDto.entityToDto(novelDetail);
     }
 
     public NovelDetailDto modifyNovelDetailByReader(ReaderEntity reader,
@@ -92,17 +85,7 @@ public class NovelDetailService {
         novelDetail = NovelDetailEntity.setNovelDetail(novelDetailName, novelDetailIntroduce, imageUrl, novel, novelDataFile, mediaDto);
         novelDetailRepository.save(novelDetail);
 
-        return NovelDetailDto.builder()
-                .id(novelDetail.getId())
-                .novelId(novel.getId())
-                .novelDetailName(novelDetailName)
-                .novelDetailIntroduce(novelDetailIntroduce)
-                .publisherType(novelDetail.getPublisherType())
-                .authorName(reader.getUsername())
-                .novelImageUrl(imageUrl)
-                .totalScore(0L)
-                .mediaDto(mediaDto)
-                .build();
+        return NovelDetailDto.entityToDto(novelDetail);
     }
 
     public void deactivateNovelDetailByReader(ReaderEntity reader, Long novelId, Long novelDetailId) {
@@ -158,5 +141,28 @@ public class NovelDetailService {
             throw new INovelException(INVALID_FILE_TYPE);
         }
         return fileList;
+    }
+
+    public NovelDetailDto viewNovelDetail(Long novelDetailId) {
+        NovelDetailEntity novelDetail = novelDetailRepository.findById(novelDetailId)
+                .orElseThrow(() -> new INovelException(NOVEL_DETAIL_NOT_FOUND));
+
+        return NovelDetailDto.entityToDto(novelDetail);
+    }
+
+    public List<NovelDetailListDto> viewListOfNovelDetail(Long novelId, String order, long startIdx, long endIdx) {
+        NovelEntity novel = novelRepository.findById(novelId)
+                .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
+        switch (order) {
+            case "desc" -> {
+                return novelDetailRepositoryQuerydsl.viewListOfNovelDetailByDesc(novel, startIdx, endIdx);
+            }
+            case "asc" -> {
+                return novelDetailRepositoryQuerydsl.viewListOfNovelDetailByAsc(novel, startIdx, endIdx);
+            }
+            default -> {
+            }
+        }
+        throw new INovelException(INVALID_PARAMETER_VALUE);
     }
 }

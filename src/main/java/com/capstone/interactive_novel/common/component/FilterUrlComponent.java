@@ -8,7 +8,7 @@ import java.util.*;
 public class FilterUrlComponent {
 
     public Set<String> filterUrlSet() {
-        List<String> urlList = new ArrayList<>(Arrays.asList("/sign/up", "/sign/in", "/sign/email-auth", "/novel/list", "/novel/score", "/novel/review/list", "/novel/comment/list", "/swagger", "/v2/api-docs", "/v3/api-docs"));
+        List<String> urlList = new ArrayList<>(Arrays.asList("/sign/up", "/sign/in", "/sign/email-auth", "/novel/list", "/novel/view", "/novel/score", "/novel/review/list", "/novel/comment/list", "/swagger", "/v2/api-docs", "/v3/api-docs"));
         return new HashSet<>(urlList);
     }
 }

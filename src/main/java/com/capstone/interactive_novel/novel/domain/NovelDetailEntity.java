@@ -31,8 +31,6 @@ public class NovelDetailEntity {
 
     private String novelDetailImageUrl;
 
-    private Long detailScore;
-
     @Enumerated(EnumType.STRING)
     private NovelDetailStatus novelDetailStatus;
 
@@ -55,7 +53,6 @@ public class NovelDetailEntity {
                 .novelDetailImageUrl(imageUrl)
                 .publisherType(PublisherType.READER)
                 .novel(novel)
-                .detailScore(0L)
                 .novelData(FileUtils.fileToLobConverter(novelScriptFile))
                 .imageList(mediaDto.getImagelist())
                 .soundList(mediaDto.getSoundList())

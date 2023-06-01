@@ -116,6 +116,11 @@ public class NovelController {
     }
 
     // 전체 관련
+    @GetMapping("/view/{novelDetailId}")
+    public ResponseEntity<NovelDetailDto> viewNovelDetail(@PathVariable Long novelDetailId) {
+        return ResponseEntity.ok(novelDetailService.viewNovelDetail(novelDetailId));
+    }
+
     @ApiOperation(value = viewListOfNewNovelValue, notes = viewListOfNewNovelNotes)
     @GetMapping("/list/new")
     public ResponseEntity<List<NovelDto>> viewListOfNewNovel() {
@@ -136,6 +141,14 @@ public class NovelController {
                                                                 @RequestParam("startIdx") long startIdx,
                                                                 @RequestParam("endIdx") long endIdx) {
         return ResponseEntity.ok(novelService.viewListOfAuthorNovel(authorId, publisherType, startIdx, endIdx));
+    }
+
+    @GetMapping("/list/detail/{novelId}")
+    public ResponseEntity<List<NovelDetailListDto>> viewListOfNovelDetail(@PathVariable Long novelId,
+                                                                      @RequestParam("order") String order,
+                                                                      @RequestParam("startIdx") long startIdx,
+                                                                      @RequestParam("endIdx") long endIdx) {
+        return ResponseEntity.ok(novelDetailService.viewListOfNovelDetail(novelId, order, startIdx, endIdx));
     }
 
     @ApiOperation(value = viewNovelAverageScoreValue, notes = viewNovelAverageScoreNotes)
