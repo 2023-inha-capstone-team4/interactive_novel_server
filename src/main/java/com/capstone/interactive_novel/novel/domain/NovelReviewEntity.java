@@ -1,6 +1,7 @@
 package com.capstone.interactive_novel.novel.domain;
 
 import com.capstone.interactive_novel.common.type.PublisherType;
+import com.capstone.interactive_novel.novel.type.NovelReviewStatus;
 import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.*;

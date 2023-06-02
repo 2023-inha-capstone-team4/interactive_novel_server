@@ -8,7 +8,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-import static com.capstone.interactive_novel.notification.domain.NotificationStatus.UNREAD;
+import static com.capstone.interactive_novel.notification.type.NotificationStatus.UNREAD;
 
 @Data
 @Builder

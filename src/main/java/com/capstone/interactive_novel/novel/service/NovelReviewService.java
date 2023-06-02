@@ -19,8 +19,8 @@ import java.util.List;
 import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
 import static com.capstone.interactive_novel.common.type.PublisherType.READER;
 import static com.capstone.interactive_novel.kafka.type.KafkaTopicType.NOVEL_REVIEW_SCORE;
-import static com.capstone.interactive_novel.novel.domain.NovelReviewStatus.AVAILABLE;
-import static com.capstone.interactive_novel.novel.domain.NovelReviewStatus.DEACTIVATED;
+import static com.capstone.interactive_novel.novel.type.NovelReviewStatus.AVAILABLE;
+import static com.capstone.interactive_novel.novel.type.NovelReviewStatus.DEACTIVATED;
 
 @Service
 @RequiredArgsConstructor

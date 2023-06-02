@@ -3,6 +3,7 @@ package com.capstone.interactive_novel.novel.domain;
 import com.capstone.interactive_novel.common.type.PublisherType;
 import com.capstone.interactive_novel.common.utils.FileUtils;
 import com.capstone.interactive_novel.novel.dto.NovelDetailMediaDto;
+import com.capstone.interactive_novel.novel.type.NovelDetailStatus;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 

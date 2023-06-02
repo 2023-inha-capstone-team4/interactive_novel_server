@@ -26,7 +26,7 @@ import java.util.List;
 import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
 import static com.capstone.interactive_novel.common.type.FileType.IMAGE;
 import static com.capstone.interactive_novel.common.type.FileType.SOUND;
-import static com.capstone.interactive_novel.novel.domain.NovelDetailStatus.DEACTIVATED;
+import static com.capstone.interactive_novel.novel.type.NovelDetailStatus.DEACTIVATED;
 
 @Service
 @RequiredArgsConstructor

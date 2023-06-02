@@ -2,6 +2,7 @@ package com.capstone.interactive_novel.notification.domain;
 
 import com.capstone.interactive_novel.common.type.PublisherType;
 import com.capstone.interactive_novel.fcm.domain.FcmTokenEntity;
+import com.capstone.interactive_novel.notification.type.NotificationStatus;
 import lombok.*;
 
 import javax.persistence.*;

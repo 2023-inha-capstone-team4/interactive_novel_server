@@ -1,7 +1,7 @@
 package com.capstone.interactive_novel.novel.repository;
 
 import com.capstone.interactive_novel.novel.domain.NovelEntity;
-import com.capstone.interactive_novel.novel.domain.NovelReviewStatus;
+import com.capstone.interactive_novel.novel.type.NovelReviewStatus;
 import com.capstone.interactive_novel.novel.dto.NovelReviewDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;

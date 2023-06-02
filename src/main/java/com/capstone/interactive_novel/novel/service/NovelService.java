@@ -3,9 +3,9 @@ package com.capstone.interactive_novel.novel.service;
 import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.common.service.S3Service;
 import com.capstone.interactive_novel.fcm.event.createNovel.BookmarkedReaderCreatedNewNovelEvent;
-import com.capstone.interactive_novel.novel.domain.NovelDetailStatus;
+import com.capstone.interactive_novel.novel.type.NovelDetailStatus;
 import com.capstone.interactive_novel.novel.domain.NovelEntity;
-import com.capstone.interactive_novel.novel.domain.NovelStatus;
+import com.capstone.interactive_novel.novel.type.NovelStatus;
 import com.capstone.interactive_novel.novel.dto.NovelDto;
 import com.capstone.interactive_novel.novel.repository.NovelDetailRepositoryQuerydsl;
 import com.capstone.interactive_novel.novel.repository.NovelRepository;
@@ -26,8 +26,8 @@ import java.util.List;
 import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
 import static com.capstone.interactive_novel.common.type.PublisherType.PUBLISHER;
 import static com.capstone.interactive_novel.common.type.PublisherType.READER;
-import static com.capstone.interactive_novel.novel.domain.NovelStatus.FREE;
-import static com.capstone.interactive_novel.novel.domain.NovelStatus.PAY;
+import static com.capstone.interactive_novel.novel.type.NovelStatus.FREE;
+import static com.capstone.interactive_novel.novel.type.NovelStatus.PAY;
 
 @RequiredArgsConstructor
 @Service

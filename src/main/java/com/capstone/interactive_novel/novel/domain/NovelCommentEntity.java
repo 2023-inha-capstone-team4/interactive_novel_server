@@ -1,11 +1,12 @@
 package com.capstone.interactive_novel.novel.domain;
 
+import com.capstone.interactive_novel.novel.type.NovelCommentStatus;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.*;
 
 import javax.persistence.*;
 
-import static com.capstone.interactive_novel.novel.domain.NovelCommentStatus.AVAILABLE;
+import static com.capstone.interactive_novel.novel.type.NovelCommentStatus.AVAILABLE;
 
 @Entity
 @Getter

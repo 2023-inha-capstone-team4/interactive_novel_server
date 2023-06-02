@@ -22,7 +22,7 @@ import java.util.Optional;
 
 import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
 import static com.capstone.interactive_novel.kafka.type.KafkaTopicType.COMMENT_RECOMMEND;
-import static com.capstone.interactive_novel.novel.domain.NovelCommentStatus.DEACTIVATED;
+import static com.capstone.interactive_novel.novel.type.NovelCommentStatus.DEACTIVATED;
 
 @Service
 @RequiredArgsConstructor

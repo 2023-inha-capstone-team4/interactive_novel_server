@@ -1,6 +1,6 @@
 package com.capstone.interactive_novel.novel.repository;
 
-import com.capstone.interactive_novel.novel.domain.NovelCommentStatus;
+import com.capstone.interactive_novel.novel.type.NovelCommentStatus;
 import com.capstone.interactive_novel.novel.domain.NovelDetailEntity;
 import com.capstone.interactive_novel.novel.dto.NovelCommentDto;
 import com.querydsl.core.types.Projections;

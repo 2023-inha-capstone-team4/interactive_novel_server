@@ -1,6 +1,6 @@
 package com.capstone.interactive_novel.novel.repository;
 
-import com.capstone.interactive_novel.novel.domain.NovelStatus;
+import com.capstone.interactive_novel.novel.type.NovelStatus;
 import com.capstone.interactive_novel.novel.dto.NovelDto;
 import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
