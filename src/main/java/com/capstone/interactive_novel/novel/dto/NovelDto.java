@@ -1,6 +1,7 @@
 package com.capstone.interactive_novel.novel.dto;
 
 import com.capstone.interactive_novel.common.type.PublisherType;
+import com.capstone.interactive_novel.novel.domain.NovelEntity;
 import com.capstone.interactive_novel.novel.type.NovelCategoryType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,6 +34,20 @@ public class NovelDto {
                 .novelImageUrl(novelImageUrl)
                 .totalScore(totalScore)
                 .categoryTypeList(categoryTypeList)
+                .build();
+    }
+
+    public static NovelDto entityToDto(NovelEntity novel) {
+        return NovelDto.builder()
+                .id(novel.getId())
+                .novelName(novel.getNovelName())
+                .authorId(novel.getAuthorId())
+                .authorName(novel.getAuthorName())
+                .novelIntroduce(novel.getNovelIntroduce())
+                .publisherType(novel.getPublisherType())
+                .novelImageUrl(novel.getNovelImageUrl())
+                .totalScore(novel.getTotalScore())
+                .categoryTypeList(novel.getNovelCategoryTypeList())
                 .build();
     }
 }

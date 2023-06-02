@@ -156,6 +156,13 @@ public class NovelController {
         return ResponseEntity.ok(novelService.viewListOfKeywordSearch(keyword, startIdx, endIdx));
     }
 
+    @GetMapping("/list/category")
+    public ResponseEntity<List<NovelDto>> viewListOfCategorizedNovel(@RequestParam("category") String category,
+                                                                     @RequestParam("startIdx") long startIdx,
+                                                                     @RequestParam("endIdx") long endIdx) {
+        return ResponseEntity.ok(novelService.viewListOfCategorizedNovel(category, startIdx, endIdx));
+    }
+
     @ApiOperation(value = viewListOfNovelDetailValue, notes = viewListOfNovelDetailNotes)
     @GetMapping("/list/detail/{novelId}")
     public ResponseEntity<List<NovelDetailListDto>> viewListOfNovelDetail(@PathVariable Long novelId,

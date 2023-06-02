@@ -172,6 +172,10 @@ public class NovelService {
         return novelRepositoryQuerydsl.viewListOfKeywordSearchNovel(keyword, startIdx, endIdx);
     }
 
+    public List<NovelDto> viewListOfCategorizedNovel(String category, long startIdx, long endIdx) {
+        return novelRepositoryQuerydsl.viewListOfCategorizedNovel(mappingCategory(category), startIdx, endIdx);
+    }
+
     public Double viewNovelAverageScore(Long novelId) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
@@ -182,20 +186,44 @@ public class NovelService {
     private List<NovelCategoryType> setCategories(List<String> categories) {
         List<NovelCategoryType> categoryTypeList = new ArrayList<>();
         for(String category : categories) {
-            switch (category) {
-                case "romance" -> categoryTypeList.add(ROMANCE);
-                case "fantasy" -> categoryTypeList.add(FANTASY);
-                case "action" -> categoryTypeList.add(ACTION);
-                case "daily" -> categoryTypeList.add(DAILY);
-                case "thriller" -> categoryTypeList.add(THRILLER);
-                case "gag" -> categoryTypeList.add(GAG);
-                case "historic" -> categoryTypeList.add(HISTORIC);
-                case "drama" -> categoryTypeList.add(DRAMA);
-                case "emotion" -> categoryTypeList.add(EMOTION);
-                case "sports" -> categoryTypeList.add(SPORTS);
-                default -> throw new INovelException(INVALID_PARAMETER_VALUE);
-            }
+            categoryTypeList.add(mappingCategory(category));
         }
         return categoryTypeList;
+    }
+
+    private NovelCategoryType mappingCategory(String category) {
+        switch (category) {
+            case "romance" -> {
+                return ROMANCE;
+            }
+            case "fantasy" -> {
+                return FANTASY;
+            }
+            case "action" -> {
+                return ACTION;
+            }
+            case "daily" -> {
+                return DAILY;
+            }
+            case "thriller" -> {
+                return THRILLER;
+            }
+            case "gag" -> {
+                return GAG;
+            }
+            case "historic" -> {
+                return HISTORIC;
+            }
+            case "drama" -> {
+                return DRAMA;
+            }
+            case "emotion" -> {
+                return EMOTION;
+            }
+            case "sports" -> {
+                return SPORTS;
+            }
+            default -> throw new INovelException(INVALID_PARAMETER_VALUE);
+        }
     }
 }
