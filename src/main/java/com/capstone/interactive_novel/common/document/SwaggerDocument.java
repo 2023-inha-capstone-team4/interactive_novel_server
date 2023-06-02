@@ -48,11 +48,11 @@ public class SwaggerDocument {
     public static class documentAboutNovelController {
         // createNovelByReader
         public static final String createNovelByReaderValue = "READER 소설 작성";
-        public static final String createNovelByReaderNotes = "READER 권한의 사용자가 소설을 작성하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>추가적으로 <b>소설 대표 이미지</b>, <b>소설 제목</b>, <b>소설 소개글</b>을 <u>form-data</u>로 전달한다. <br>소설 제목은 중복될 수 없다. <br>성공 시 소설 정보를 반환한다.";
+        public static final String createNovelByReaderNotes = "READER 권한의 사용자가 소설을 작성하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>추가적으로 <b>소설 대표 이미지</b>, <b>소설 제목</b>, <b>소설 소개글</b>, <b>소설 카테고리</b>를 <u>form-data</u>로 전달한다. <br>소설 제목은 중복될 수 없다. <br>소설 카테고리의 경우 <u>romance</u>, <u>fantasy</u>, <u>action</u>, <u>daily</u>, <u>thriller</u>, <u>gag</u>, <u>historic</u>, <u>drama</u>, <u>emotion</u>, <u>sports</u>를 입력으로 받을 수 있다. <br>성공 시 소설 정보를 반환한다.";
 
         // modifyNovelByReader
         public static final String modifyNovelByReaderValue = "READER 소설 편집";
-        public static final String modifyNovelByReaderNotes = "READER 권한의 사용자가 소설을 편집하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>추가적으로 <b>소설 대표 이미지</b>, <b>소설 소개글</b>을 <u>form-data</u>로 전달한다. <br>소설 제목은 수정할 수 없다. <br>성공 시 소설 정보를 반환한다.";
+        public static final String modifyNovelByReaderNotes = "READER 권한의 사용자가 소설을 편집하기 위해 <b>READER</b>의 <b>JWT Access Token</b>을 <u>Authorization header</u>로 전달. <br>추가적으로 <b>소설 대표 이미지</b>, <b>소설 소개글</b>, <b>소설 카테고리</b>를 <u>form-data</u>로 전달한다. <br>수정하지 않을 파라미터는 넣지 않아도 된다. <br>소설 제목은 수정할 수 없다. <br>소설 카테고리의 경우 <u>romance</u>, <u>fantasy</u>, <u>action</u>, <u>daily</u>, <u>thriller</u>, <u>gag</u>, <u>historic</u>, <u>drama</u>, <u>emotion</u>, <u>sports</u>를 입력으로 받을 수 있다. <br>성공 시 소설 정보를 반환한다.";
 
         // deactivateNovelByReader
         public static final String deactivateNovelByReaderValue = "READER 소설 비활성화";

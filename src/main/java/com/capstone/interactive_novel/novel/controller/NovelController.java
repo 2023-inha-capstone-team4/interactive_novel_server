@@ -31,8 +31,9 @@ public class NovelController {
     public ResponseEntity<NovelDto> createNovelByReader(@AuthenticationPrincipal ReaderEntity reader,
                                                         @RequestPart MultipartFile file,
                                                         @RequestPart String novelName,
-                                                        @RequestPart String novelIntroduce) {
-        return ResponseEntity.ok(novelService.createNovelByReader(reader, file, novelName, novelIntroduce));
+                                                        @RequestPart String novelIntroduce,
+                                                        @RequestPart List<String> categories) {
+        return ResponseEntity.ok(novelService.createNovelByReader(reader, file, novelName, novelIntroduce, categories));
     }
 
     @ApiOperation(value = modifyNovelByReaderValue, notes = modifyNovelByReaderNotes)
@@ -40,8 +41,9 @@ public class NovelController {
     ResponseEntity<NovelDto> modifyNovelByReader(@AuthenticationPrincipal ReaderEntity reader,
                                                  @PathVariable Long novelId,
                                                  @RequestPart(required = false) MultipartFile file,
-                                                 @RequestPart(required = false) String novelIntroduce) {
-        return ResponseEntity.ok(novelService.modifyNovelByReader(reader, novelId, file, novelIntroduce));
+                                                 @RequestPart(required = false) String novelIntroduce,
+                                                 @RequestPart(required = false) List<String> categories) {
+        return ResponseEntity.ok(novelService.modifyNovelByReader(reader, novelId, file, novelIntroduce, categories));
     }
 
     @ApiOperation(value = deactivateNovelByReaderValue, notes = deactivateNovelByReaderNotes)
@@ -111,8 +113,9 @@ public class NovelController {
                                                            @RequestPart MultipartFile file,
                                                            @RequestPart String novelName,
                                                            @RequestPart String novelIntroduce,
+                                                           @RequestPart List<String> categories,
                                                            @RequestPart String payType) {
-        return ResponseEntity.ok(novelService.createNovelByPublisher(publisher, file, novelName, novelIntroduce, payType));
+        return ResponseEntity.ok(novelService.createNovelByPublisher(publisher, file, novelName, novelIntroduce, categories, payType));
     }
 
     // 전체 관련

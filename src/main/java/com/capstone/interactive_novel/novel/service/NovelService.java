@@ -3,6 +3,7 @@ package com.capstone.interactive_novel.novel.service;
 import com.capstone.interactive_novel.common.exception.INovelException;
 import com.capstone.interactive_novel.common.service.S3Service;
 import com.capstone.interactive_novel.fcm.event.createNovel.BookmarkedReaderCreatedNewNovelEvent;
+import com.capstone.interactive_novel.novel.type.NovelCategoryType;
 import com.capstone.interactive_novel.novel.type.NovelDetailStatus;
 import com.capstone.interactive_novel.novel.domain.NovelEntity;
 import com.capstone.interactive_novel.novel.type.NovelStatus;
@@ -21,11 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.capstone.interactive_novel.common.exception.ErrorCode.*;
 import static com.capstone.interactive_novel.common.type.PublisherType.PUBLISHER;
 import static com.capstone.interactive_novel.common.type.PublisherType.READER;
+import static com.capstone.interactive_novel.novel.type.NovelCategoryType.*;
 import static com.capstone.interactive_novel.novel.type.NovelStatus.FREE;
 import static com.capstone.interactive_novel.novel.type.NovelStatus.PAY;
 
@@ -46,27 +49,30 @@ public class NovelService {
     public NovelDto createNovelByReader(ReaderEntity reader,
                                         MultipartFile file,
                                         String novelName,
-                                        String novelIntroduce) {
+                                        String novelIntroduce,
+                                        List<String> categories) {
         if(novelRepository.findByNovelName(novelName).isPresent()) {
             throw new INovelException(ALREADY_USING_NOVEL_NAME);
         }
         if(!reader.isAuthorServiceYn()) {
             throw new INovelException(UNVERIFIED_USER);
         }
+        List<NovelCategoryType> categoryTypeList = setCategories(categories);
 
         String imageUrl = s3Service.uploadFile(file, NOVEL_DOMAIN, novelName);
-        NovelEntity novel = NovelEntity.createNovelByReader(reader, novelName, reader.getUsername(), reader.getId(), novelIntroduce, imageUrl);
+        NovelEntity novel = NovelEntity.createNovelByReader(reader, novelName, reader.getUsername(), reader.getId(), novelIntroduce, imageUrl, categoryTypeList);
         novelRepository.save(novel);
 
         eventPublisher.publishEvent(new BookmarkedReaderCreatedNewNovelEvent(reader, novel));
 
-        return NovelDto.of(novel.getId(), novel.getNovelName(), reader.getUsername(), reader.getId(), novel.getNovelIntroduce(), READER, novel.getNovelImageUrl(), novel.getTotalScore());
+        return NovelDto.of(novel.getId(), novel.getNovelName(), reader.getUsername(), reader.getId(), novel.getNovelIntroduce(), READER, novel.getNovelImageUrl(), novel.getTotalScore(), novel.getNovelCategoryTypeList());
     }
 
     public NovelDto modifyNovelByReader(ReaderEntity reader,
                                         Long novelId,
                                         MultipartFile file,
-                                        String novelIntroduce) {
+                                        String novelIntroduce,
+                                        List<String> categories) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
         if(novel.getReader().getId() != reader.getId()) {
@@ -78,9 +84,12 @@ public class NovelService {
         if(!ObjectUtils.isEmpty(novelIntroduce)) {
             novel.setNovelIntroduce(novelIntroduce);
         }
-
+        if(!ObjectUtils.isEmpty(categories)) {
+            List<NovelCategoryType> categoryTypeList = setCategories(categories);
+            novel.setNovelCategoryTypeList(categoryTypeList);
+        }
         novelRepository.save(novel);
-        return NovelDto.of(novel.getId(), novel.getNovelName(), reader.getUsername(), reader.getId(), novel.getNovelIntroduce(), READER, novel.getNovelImageUrl(), novel.getTotalScore());
+        return NovelDto.of(novel.getId(), novel.getNovelName(), reader.getUsername(), reader.getId(), novel.getNovelIntroduce(), READER, novel.getNovelImageUrl(), novel.getTotalScore(), novel.getNovelCategoryTypeList());
     }
 
     @Transactional
@@ -106,6 +115,7 @@ public class NovelService {
                                            MultipartFile file,
                                            String novelName,
                                            String novelIntroduce,
+                                           List<String> categories,
                                            String payType) {
         if(novelRepository.findByNovelName(novelName).isPresent()) {
             throw new INovelException(ALREADY_USING_NOVEL_NAME);
@@ -122,11 +132,13 @@ public class NovelService {
             throw new INovelException(INVALID_PAY_TYPE);
         }
 
+        List<NovelCategoryType> categoryTypeList = setCategories(categories);
+
         String imageUrl = s3Service.uploadFile(file, NOVEL_DOMAIN, novelName);
-        NovelEntity novel = NovelEntity.createNovelByPublisher(publisher, novelName, publisher.getUsername(), publisher.getId(),novelIntroduce, imageUrl, novelStatus);
+        NovelEntity novel = NovelEntity.createNovelByPublisher(publisher, novelName, publisher.getUsername(), publisher.getId(),novelIntroduce, imageUrl, novelStatus, categoryTypeList);
         novelRepository.save(novel);
 
-        return NovelDto.of(novel.getId(), novel.getNovelName(), publisher.getUsername(), publisher.getId(), novel.getNovelIntroduce(), PUBLISHER, novel.getNovelImageUrl(), novel.getTotalScore());
+        return NovelDto.of(novel.getId(), novel.getNovelName(), publisher.getUsername(), publisher.getId(), novel.getNovelIntroduce(), PUBLISHER, novel.getNovelImageUrl(), novel.getTotalScore(), novel.getNovelCategoryTypeList());
     }
 
     // 전체 사용
@@ -167,4 +179,23 @@ public class NovelService {
                 0.0 : ((double) novel.getTotalScore()) / ((double) novel.getReviewerAmount());
     }
 
+    private List<NovelCategoryType> setCategories(List<String> categories) {
+        List<NovelCategoryType> categoryTypeList = new ArrayList<>();
+        for(String category : categories) {
+            switch (category) {
+                case "romance" -> categoryTypeList.add(ROMANCE);
+                case "fantasy" -> categoryTypeList.add(FANTASY);
+                case "action" -> categoryTypeList.add(ACTION);
+                case "daily" -> categoryTypeList.add(DAILY);
+                case "thriller" -> categoryTypeList.add(THRILLER);
+                case "gag" -> categoryTypeList.add(GAG);
+                case "historic" -> categoryTypeList.add(HISTORIC);
+                case "drama" -> categoryTypeList.add(DRAMA);
+                case "emotion" -> categoryTypeList.add(EMOTION);
+                case "sports" -> categoryTypeList.add(SPORTS);
+                default -> throw new INovelException(INVALID_PARAMETER_VALUE);
+            }
+        }
+        return categoryTypeList;
+    }
 }

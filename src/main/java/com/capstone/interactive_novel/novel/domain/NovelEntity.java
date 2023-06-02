@@ -1,12 +1,14 @@
 package com.capstone.interactive_novel.novel.domain;
 
 import com.capstone.interactive_novel.common.type.PublisherType;
+import com.capstone.interactive_novel.novel.type.NovelCategoryType;
 import com.capstone.interactive_novel.novel.type.NovelStatus;
 import com.capstone.interactive_novel.publisher.domain.PublisherEntity;
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -47,7 +49,11 @@ public class NovelEntity {
     @Enumerated(EnumType.STRING)
     private PublisherType publisherType;
 
-    public static NovelEntity createNovelByReader(ReaderEntity reader, String novelName, String authorName, Long authorId, String novelIntroduce, String imageUrl) {
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    private List<NovelCategoryType> novelCategoryTypeList;
+
+    public static NovelEntity createNovelByReader(ReaderEntity reader, String novelName, String authorName, Long authorId, String novelIntroduce, String imageUrl, List<NovelCategoryType> categoryTypeList) {
         return NovelEntity.builder()
                 .reader(reader)
                 .novelName(novelName)
@@ -58,10 +64,11 @@ public class NovelEntity {
                 .novelStatus(NovelStatus.FREE)
                 .publisherType(PublisherType.READER)
                 .totalScore(0L)
+                .novelCategoryTypeList(categoryTypeList)
                 .build();
     }
 
-    public static NovelEntity createNovelByPublisher(PublisherEntity publisher, String novelName, String authorName, Long authorId, String novelIntroduce, String imageUrl, NovelStatus novelStatus) {
+    public static NovelEntity createNovelByPublisher(PublisherEntity publisher, String novelName, String authorName, Long authorId, String novelIntroduce, String imageUrl, NovelStatus novelStatus, List<NovelCategoryType> categoryTypeList) {
         return NovelEntity.builder()
                 .publisher(publisher)
                 .novelName(novelName)
@@ -72,6 +79,7 @@ public class NovelEntity {
                 .novelStatus(novelStatus)
                 .publisherType(PublisherType.PUBLISHER)
                 .totalScore(0L)
+                .novelCategoryTypeList(categoryTypeList)
                 .build();
     }
 }
