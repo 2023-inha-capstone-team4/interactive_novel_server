@@ -18,6 +18,7 @@ import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -150,6 +151,7 @@ public class NovelDetailService {
         return NovelDetailDto.entityToDto(novelDetail);
     }
 
+    @Transactional(readOnly = true)
     public List<NovelDetailListDto> viewListOfNovelDetail(Long novelId, String order, long startIdx, long endIdx) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));

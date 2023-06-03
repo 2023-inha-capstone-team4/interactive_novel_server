@@ -13,6 +13,7 @@ import com.capstone.interactive_novel.novel.repository.NovelReviewRepositoryQuer
 import com.capstone.interactive_novel.reader.domain.ReaderEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -98,6 +99,7 @@ public class NovelReviewService {
         novelRepository.save(novel);
     }
 
+    @Transactional(readOnly = true)
     public List<NovelReviewDto> viewListOfNewNovelReview(long startIdx, long endIdx, Long novelId, String method, String order) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));

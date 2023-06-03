@@ -78,6 +78,7 @@ public class NovelCommentService {
         novelCommentRepository.save(novelComment);
     }
 
+    @Transactional(readOnly = true)
     public List<NovelCommentDto> viewListOfComment(long startIdx, long endIdx, Long novelDetailId, String method) {
         NovelDetailEntity novelDetail = novelDetailRepository.findById(novelDetailId)
                 .orElseThrow(() -> new INovelException(NOVEL_DETAIL_NOT_FOUND));

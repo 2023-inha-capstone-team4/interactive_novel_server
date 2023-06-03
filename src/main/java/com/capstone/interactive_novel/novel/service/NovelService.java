@@ -105,6 +105,7 @@ public class NovelService {
         novelRepository.save(novel);
     }
 
+    @Transactional(readOnly = true)
     public List<NovelDto> viewOwnNovelListByReader(ReaderEntity reader, long startIdx, long endIdx) {
         return novelRepositoryQuerydsl.viewListOfNovelAboutReader(reader, startIdx, endIdx);
     }
@@ -142,14 +143,17 @@ public class NovelService {
     }
 
     // 전체 사용
+    @Transactional(readOnly = true)
     public List<NovelDto> viewListOfNewNovel() {
         return novelRepositoryQuerydsl.viewListOfNewNovel();
     }
 
+    @Transactional(readOnly = true)
     public List<NovelDto> viewListOfPopularNovel(long startIdx, long endIdx) {
         return novelRepositoryQuerydsl.viewListOfPopularNovel(startIdx, endIdx);
     }
 
+    @Transactional(readOnly = true)
     public List<NovelDto> viewListOfAuthorNovel(Long authorId, String type, long startIdx, long endIdx) {
         switch (type) {
             case "reader" -> {
@@ -168,14 +172,17 @@ public class NovelService {
         throw new INovelException(INVALID_PARAMETER_VALUE);
     }
 
+    @Transactional(readOnly = true)
     public List<NovelDto> viewListOfKeywordSearch(String keyword, long startIdx, long endIdx) {
         return novelRepositoryQuerydsl.viewListOfKeywordSearchNovel(keyword, startIdx, endIdx);
     }
 
+    @Transactional(readOnly = true)
     public List<NovelDto> viewListOfCategorizedNovel(String category, long startIdx, long endIdx) {
         return novelRepositoryQuerydsl.viewListOfCategorizedNovel(mappingCategory(category), startIdx, endIdx);
     }
 
+    @Transactional(readOnly = true)
     public Double viewNovelAverageScore(Long novelId) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
