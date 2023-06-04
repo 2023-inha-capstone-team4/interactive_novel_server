@@ -106,18 +106,12 @@ public class NovelDetailService {
 
     public List<String> uploadFilesByReader(ReaderEntity reader,
                                             Long novelId,
-                                            Long novelDetailId,
                                             MultipartFile[] files,
                                             String fileType) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new INovelException(NOVEL_NOT_FOUND));
-        NovelDetailEntity novelDetail = novelDetailRepository.findById(novelDetailId)
-                .orElseThrow(() -> new INovelException(NOVEL_DETAIL_NOT_FOUND));
         if(novel.getReader().getId() != reader.getId()) {
             throw new INovelException(UNMATCHED_USER_INFO);
-        }
-        if(novelDetail.getNovel().getId() != novelId) {
-            throw new INovelException(UNMATCHED_NOVEL_INFO);
         }
 
         List<String> fileList = new ArrayList<>();
@@ -127,7 +121,7 @@ public class NovelDetailService {
                 if(!FileUtils.checkExtension(file, IMAGE.getAllowedFileType())) {
                     throw new INovelException(WRONG_FILE_EXTENSION);
                 }
-                fileList.add(s3Service.uploadFile(file, FileDomain.NOVEL_IMAGE_DOMAIN.getDescription(), novel.getId() + "/" + novelDetail.getId()));
+                fileList.add(s3Service.uploadFile(file, FileDomain.NOVEL_IMAGE_DOMAIN.getDescription(), String.valueOf(novel.getId())));
             }
         }
         else if(fileType.toLowerCase().equals(SOUND.getFileType())) {
@@ -135,7 +129,7 @@ public class NovelDetailService {
                 if(!FileUtils.checkExtension(file, SOUND.getAllowedFileType())) {
                     throw new INovelException(WRONG_FILE_EXTENSION);
                 }
-                fileList.add(s3Service.uploadFile(file, FileDomain.NOVEL_SOUND_DOMAIN.getDescription(), novel.getId() + "/" + novelDetail.getId()));
+                fileList.add(s3Service.uploadFile(file, FileDomain.NOVEL_SOUND_DOMAIN.getDescription(), String.valueOf(novel.getId())));
             }
         }
         else {

@@ -89,13 +89,12 @@ public class NovelController {
     }
 
     @ApiOperation(value = uploadFileOnNovelDetailByReaderValue, notes = uploadFileOnNovelDetailByReaderNotes)
-    @PostMapping("/reader/{novelId}/{novelDetailId}/uploadFile")
+    @PostMapping("/reader/{novelId}/uploadFile")
     public ResponseEntity<List<String>> uploadFileOnNovelDetailByReader(@AuthenticationPrincipal ReaderEntity reader,
                                                                         @PathVariable Long novelId,
-                                                                        @PathVariable Long novelDetailId,
                                                                         @RequestPart MultipartFile[] files,
                                                                         @RequestPart String fileType) {
-        return ResponseEntity.ok(novelDetailService.uploadFilesByReader(reader, novelId, novelDetailId, files, fileType));
+        return ResponseEntity.ok(novelDetailService.uploadFilesByReader(reader, novelId, files, fileType));
     }
 
     @ApiOperation(value = viewListOfOwnNovelByReaderValue, notes = viewListOfOwnNovelByReaderNotes)
