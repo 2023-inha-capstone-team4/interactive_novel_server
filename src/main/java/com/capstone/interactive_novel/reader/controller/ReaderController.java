@@ -25,7 +25,8 @@ public class ReaderController {
     @ApiOperation(value = getAuthorRoleValue, notes = getAuthorRoleNotes)
     @PostMapping("/getAuthor")
     public ResponseEntity<?> applyAuthorRole(@AuthenticationPrincipal ReaderEntity reader) {
-        return ResponseEntity.ok(readerService.applyAuthorService(null));
+        readerService.applyAuthorService(reader);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation(value = modifyProfileImgValue, notes = modifyProfileImgNotes)

@@ -88,13 +88,12 @@ public class ReaderService implements UserDetailsService {
         readerRepository.save(reader);
     }
 
-    public String applyAuthorService(ReaderEntity reader) {
+    public void applyAuthorService(ReaderEntity reader) {
         if(reader.isAuthorServiceYn()) {
             throw new INovelException(ALREADY_VERIFIED_USER);
         }
         reader.setAuthorServiceYn(true);
         readerRepository.save(reader);
-        return reader.getId() + ": " + reader.isAuthorServiceYn();
     }
 
     public ReaderDto.profileImg modifyReaderProfileImg(ReaderEntity reader, MultipartFile file) {
