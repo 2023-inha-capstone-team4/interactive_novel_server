@@ -63,6 +63,7 @@ public class NovelEntity {
                 .novelImageUrl(imageUrl)
                 .novelStatus(NovelStatus.FREE)
                 .publisherType(PublisherType.READER)
+                .reviewerAmount(0L)
                 .totalScore(0L)
                 .novelCategoryTypeList(categoryTypeList)
                 .build();
