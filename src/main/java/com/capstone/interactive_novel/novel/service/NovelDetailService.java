@@ -83,7 +83,12 @@ public class NovelDetailService {
         }
 
         String imageUrl = s3Service.uploadFile(file, "novel", novel.getNovelName());
-        novelDetail = NovelDetailEntity.setNovelDetail(novelDetailName, novelDetailIntroduce, imageUrl, novel, novelDataFile, mediaDto);
+        novelDetail.setNovelDetailName(novelDetailName);
+        novelDetail.setNovelDetailIntroduce(novelDetailIntroduce);
+        novelDetail.setNovelDetailImageUrl(imageUrl);
+        novelDetail.setNovelData(FileUtils.fileToLobConverter(novelDataFile));
+        novelDetail.setImageList(mediaDto.getImagelist());
+        novelDetail.setSoundList(mediaDto.getSoundList());
         novelDetailRepository.save(novelDetail);
 
         return NovelDetailDto.entityToDto(novelDetail);
