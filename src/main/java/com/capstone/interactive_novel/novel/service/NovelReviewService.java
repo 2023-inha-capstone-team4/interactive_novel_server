@@ -37,7 +37,7 @@ public class NovelReviewService {
                                                      int novelScore) {
         NovelEntity novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new INovelException(ErrorCode.NOVEL_NOT_FOUND));
-        if(novelReviewRepository.findByReaderAndNovelReviewStatus(reader, AVAILABLE).isPresent()) {
+        if(novelReviewRepository.findByReaderAndNovelAndNovelReviewStatus(reader, novel, AVAILABLE).isPresent()) {
             throw new INovelException(CANNOT_REVIEW_EXCESS_ONE);
         }
         if(novel.getReader().getId() == reader.getId()) {
